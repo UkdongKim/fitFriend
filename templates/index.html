@@ -1,14 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitFriend</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        table,
+        th,
+        tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .tile_title {
+            font-size: 30px;
+        }
+
+        .content {
+            font-size: 20px;
+            margin-bottom: 0px !important;
+        }
+
+        .input {
+            width: 100px;
+        }
+
+        textarea {
+            min-width: 25% !important;
+            max-width: 25% !important;
+        }
+    </style>
+    <script>
+        function session() {
+            let
+        }
+    </script>
 </head>
+
 <body>
-
-
-<h1>hello~ FitFriend</h1>
-<h1>{{ title }}</h1>
-
+    <h1 id="title">FitFriend</h1>
+    <main>
+        <div id="week_calendar">
+            <table>
+                <tr>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    <th>Sun</th>
+                </tr>
+                <tr>
+                    <th>
+                        <div class="tile">
+                            <div class="tile is-parent is-vertical">
+                                <article class="tile is-child notification is-primary">
+                                    <p class="tile_title">문성준
+                                    <p class="content">17:00
+                                    <p class="content">런닝 (1/4)
+                                </article>
+                            </div>
+                        </div>
+                        placeholder2
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <div id="make_session">
+            <form>
+                <h2 class="header">운동 세션 생성</h2>
+                <label for="day" class="label">요일</label>
+                <div class="select is-primary">
+                    <select name="day" id="day">
+                        <optgroup label="요일을 선택하세요">
+                            <option value="mon">월</option>
+                            <option value="tue">화</option>
+                            <option value="wed">수</option>
+                            <option value="thu">목</option>
+                            <option value="fri">금</option>
+                            <option value="sat">토</option>
+                            <option value="sun">일</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div>
+                    <label for="time" class="label">시간</label>
+                    <input type="text" class="input is-primary" id="time">
+                </div>
+                <div>
+                    <label for="exercise" class="label">운동 종목</label>
+                    <div class="select is-primary">
+                        <select name="exercise" id="exercise">
+                            <optgroup label="종목을 선택하세요">
+                                <option value="fitness">헬스</option>
+                                <option value="running">런닝</option>
+                                <option value="swimming">수영</option>
+                                <option value="basketball">농구</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="max_people" class="label">최대 인원</label>
+                    <input type="text" id="max_people" class="input is-primary">
+                </div>
+                <div>
+                    <label for="note" class="label">비고</label>
+                    <textarea id="note" cols="20" rows="2" class="textarea is-primary"></textarea>
+                </div>
+                <div>
+                    <label for="submit" class="label"> </label>
+                    <button id="submit" class="button is-primary" onclick="session();">세션 생성</button>
+                </div>
+            </form>
+        </div>
+        <div>
+            <a href="guide.html">사용 가이드</a>
+        </div>
+    </main>
 </body>
+
 </html>
