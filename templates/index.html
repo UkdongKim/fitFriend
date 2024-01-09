@@ -7,6 +7,10 @@
     <title>FitFriend</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css">
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
     <style>
         main {
             width: 1100px;
@@ -18,7 +22,9 @@
         #make_session {
             width: 500px;
             margin: auto;
-            padding: 50px;
+            padding: 52px;
+            border: 2px solid cornflowerblue;
+            text-align: center;
         }
 
         table,
@@ -85,8 +91,45 @@
         }
     </style>
     <script>
-        function session() {
-            let
+        $(document).ready(function () {
+            if ("{{session['name']}}" == "") {
+                alert("올바른 경로가 아닙니다")
+                location.href = "/login";
+            }
+        });
+        // function bringData() {
+        //     // GET 사용해서 이름 및 성별을 받고, 해당 값을 추후 타일에 넣기 위해 변수에 저장
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "/namedb",
+        //         data: {},
+        //         success: function (response) {
+        //             let name = response["name"];
+        //             let gender = response["gender"];
+        //         }
+        //     })
+        // }
+        // window.onload = bringData;
+
+        // function session() {
+        //     let
+
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/sessionDB"
+        //         data: {}
+        //         })
+        // }
+        function makeSession() {
+            let tempHtml =
+                `<div class="tile">
+                <article class="tile is-child notification is-primary">
+                    <p class="tile_title">${name}</p>
+                    <p class="content">${time}</p>
+                    <p class="content">${exercise} ${1}/${totalMember}</p>
+                </article>
+            </div>`;
+            $("#mon_slot").append(tempHtml)
         }
     </script>
 </head>
@@ -115,11 +158,12 @@
                     <th>Sun</th>
                 </tr>
                 <tr>
-                    <th class="slot">
+                    <th class="mon_slot">
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-primary">
-                                    <p class="tile_title">{{name}}
+                                    <p class="tile_title">{{session[name]}}</p>
+                                    <p class="tile_title">{{session[gender]}}</p>
                                     <p class="content">17:00
                                     <p class="content">런닝 (1/4)
                                 </article>
@@ -127,12 +171,12 @@
                         </div>
                         placeholder2
                     </th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
+                    <th class="tue_slot"></th>
+                    <th class="wed_slot"></th>
+                    <th class="thu_slot"></th>
+                    <th class="fri_slot"></th>
+                    <th class="sat_slot"></th>
+                    <th class="sun_slot"></th>
                 </tr>
             </table>
         </div>
@@ -140,8 +184,8 @@
         <div id="make_session">
             <form>
                 <h2 class="header" id="createSession">운동 세션 생성</h2>
-                <label for="day" class="label">요일</label>
-                <div class="select is-primary">
+                <!-- <label for="day" class="label">요일</label> -->
+                요일 <div class="select is-primary">
                     <select name="day" id="day">
                         <optgroup label="요일을 선택하세요">
                             <option value="mon">월</option>
@@ -154,13 +198,41 @@
                         </optgroup>
                     </select>
                 </div>
-                <div>
-                    <label for="time" class="label">시간</label>
-                    <input type="text" class="input is-primary" id="time">
+                <p></p>
+                시간 <div class="select is-primary">
+                    <!-- <label for="time" class="label">시간</label> -->
+                    <select>
+                        <optgroup>
+                            <option value="1">01:00</option>
+                            <option value="2">02:00</option>
+                            <option value="3">03:00</option>
+                            <option value="4">04:00</option>
+                            <option value="5">05:00</option>
+                            <option value="6">06:00</option>
+                            <option value="7">07:00</option>
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                            <option value="24">24:00</option>
+                        </optgroup>
+                    </select>
                 </div>
                 <div>
-                    <label for="exercise" class="label">운동 종목</label>
-                    <div class="select is-primary">
+                    <!-- <label for="exercise" class="label">운동 종목</label> -->
+                    운동 종목 <div class="select is-primary">
                         <select name="exercise" id="exercise">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
