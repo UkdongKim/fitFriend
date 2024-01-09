@@ -1,108 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fit Friend - 로그인 페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/stylesheet.css">
 </head>
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        height: 100vh;
-        width: 100vw;
-        background-color: #303030;
-    }
-
-    header {
-        font-size: 60px;
-        color: deepskyblue;
-        font-weight: bold;
-        font-style: italic;
-        text-align: center;
-        padding-top: 30px;
-        margin-bottom: 40px;
-;
-    }
-
-    main {
-        width: 30%;
-        margin: 0 auto;
-    }
-
-    .button-box {
-        text-align: center;
-        margin-bottom: 40px;
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .button-box > button {
-        width: 120px;
-        margin: 0 5px;
-    }
-
-    .login-form > div {
-        font-size: 16px;
-        text-align: right;
-        margin-bottom: 15px;
-        color: white;
-        font-weight: bold;
-        line-height: 2.2rem;
-    }
-
-    .login-form > div > input {
-        width: 60%;
-        margin-left: 10px;
-    }
-
-    .submit-btn {
-        font-size: 20px;
-        color: white;
-        font-weight: 700;
-        margin-right: 10px;
-        background-color: #303030;
-        border: none;
-        float: right;
-    }
-
-    .submit-btn:hover {
-        margin: 0 0 0 20px;
-        transition: 0.5s;
-        cursor: pointer;
-    }
-
-    footer {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-    }
-
-    footer > div {
-        margin: 20px;
-        width: 170px;
-    }
-
-    /* 로그인 회원가입 전환 */
-    .hidden {
-        display: none;
-    }
-
-    .btn-check {
-        background-color: dodgerblue;
-        border: 1px solid dodgerblue;
-        color: white;
-    }
 </style>
+
 <body>
     <!-- 로고 -->
-    <header>FitFriend</header>
+    <header>
+        <div class="guide-box">
+            <a href="./guide.html" id="userGuide">사용 가이드</a>
+        </div>
+        <hr id="headerhr">
+        <div class="title">
+            FitFriend
+        </div>
+    </header>
     <main>
         <!-- 버튼 -->
         <section class="button-box">
@@ -121,31 +42,34 @@
                     비밀번호 <input class="input" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요.">
                 </div>
             </section>
-            <input type="submit" class="submit-btn"  value="Go →"/>
+            <input type="submit" class="submit-btn" value="Go →" />
         </form>
         <!-- 회원가입 폼 작성 -->
         <form id="join-form" class="hidden" method="post" action="/join">
             <section class="login-form">
                 <div class="control">
-                    이름 <input class="input is-success" id="username" name="username" type="text" placeholder="이름을 입력하세요.">
+                    이름 <input class="input is-success" id="username" name="username" type="text"
+                        placeholder="이름을 입력하세요.">
                 </div>
                 <div style="display: flex; margin-left: 110px;">
                     <span style="margin-right: 10px;">성별</span>
-                    <div class="select is-success" >
+                    <div class="select is-success">
                         <select name="gender">
-                        <option value="남">남자</option>
-                        <option value="여">여자</option>
+                            <option value="남">남자</option>
+                            <option value="여">여자</option>
                         </select>
                     </div>
                 </div>
                 <div class="control">
-                    비밀번호 <input class="input is-success" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요.">
+                    비밀번호 <input class="input is-success" id="password" name="password" type="password"
+                        placeholder="비밀번호를 입력하세요.">
                 </div>
                 <div class="control">
-                    비밀번호 확인 <input class="input is-success" id="password" name="passwordcheck" type="password" placeholder="비밀번호를 확인하세요.">
+                    비밀번호 확인 <input class="input is-success" id="password" name="passwordcheck" type="password"
+                        placeholder="비밀번호를 확인하세요.">
                 </div>
             </section>
-            <input type="submit" class="submit-btn"  value="Go →"/>
+            <input type="submit" class="submit-btn" value="Go →" />
         </form>
     </main>
     <!-- 이미지들 -->
@@ -155,18 +79,19 @@
     </footer>
 </body>
 <script>
-    $('#login-btn').click(function() {
+    $('#login-btn').click(function () {
         $('#login-form').removeClass('hidden');
         $('#join-form').addClass('hidden');
         $('#login-btn').addClass('btn-check');
         $('#join-btn').removeClass('btn-check');
     });
 
-    $('#join-btn').click(function() {
+    $('#join-btn').click(function () {
         $('#join-form').removeClass('hidden');
         $('#login-form').addClass('hidden');
         $('#login-btn').removeClass('btn-check');
         $('#join-btn').addClass('btn-check');
     });
 </script>
+
 </html>
