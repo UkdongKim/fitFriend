@@ -14,7 +14,6 @@ app_session = Blueprint('app_session', __name__)
 @app_session.route('/session', methods = ['POST'])
 def make_session():
 
-    sessionId = bson.Binary(uuid.uuid4().bytes, subtype=0)
     userName = request.form['userName']
     userId = request.form['userId']
     day = request.form['day']
@@ -23,9 +22,7 @@ def make_session():
     max_member = request.form['max_member']
     show = True
 
-
     session = {
-        'sessionId':sessionId,
         'userName':userName,
         'userId':userId,
         'day':day,
@@ -41,7 +38,10 @@ def make_session():
         return jsonify({'success' : True, 'message' : 'Data inserted success'}), 201
     else:
         return jsonify({'success': False, 'message': 'Failed to insert data'}), 500
+
 #세션 조회
+
+
 
 #세션_참여_취소
 
