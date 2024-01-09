@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -22,19 +22,31 @@ def loginOk():
     error = None
     username = request.form['username']
     password = request.form['password']
-    test_username = '문성준07'
-    test_password = '1234'
+    check = db.users.find_one({'name' : username, 'password': password})
 
     print('메소드 들어옴1')
 
-    if username == test_username and password == test_password:
+    if check:
         print('메소드 들어옴2')
-        return render_template('index.html')
+        return render_template('index.html', name=username)
     else:
         error = '로그인 실패'
         print('메소드 들어옴3')
-        return render_template('login.html', error=error)
+        return render_template('login.html')
 
+@app.route('/join', methods=['POST'])
+def join():
+    username = request.form['username']
+    gender = request.form['gender']
+    password = request.form['password']
+    print(gender)
+
+    if username != None and gender != None and password != None:
+        db.users.insert_one({'name': username, 'password': password, 'gender': gender})
+        print('회원가입 성공')
+        return render_template('login.html')
+    else:
+        print('회원가입 실패')
 
 
 if __name__ == '__main__':

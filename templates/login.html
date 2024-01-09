@@ -17,7 +17,7 @@
     body {
         height: 100vh;
         width: 100vw;
-        background-color: dimgray;
+        background-color: #303030;
     }
 
     header {
@@ -49,7 +49,7 @@
     }
 
     .login-form > div {
-        font-size: 20px;
+        font-size: 16px;
         text-align: right;
         margin-bottom: 15px;
         color: white;
@@ -58,7 +58,7 @@
     }
 
     .login-form > div > input {
-        width: 65%;
+        width: 60%;
         margin-left: 10px;
     }
 
@@ -67,7 +67,7 @@
         color: white;
         font-weight: 700;
         margin-right: 10px;
-        background-color: dimgray;
+        background-color: #303030;
         border: none;
         float: right;
     }
@@ -127,16 +127,22 @@
         <form id="join-form" class="hidden" method="post" action="/join">
             <section class="login-form">
                 <div class="control">
-                    이름 <input class="input" id="username" name="username" type="text" placeholder="이름을 입력하세요.">
+                    이름 <input class="input is-success" id="username" name="username" type="text" placeholder="이름을 입력하세요.">
+                </div>
+                <div style="display: flex; margin-left: 110px;">
+                    <span style="margin-right: 10px;">성별</span>
+                    <div class="select is-success" >
+                        <select name="gender">
+                        <option value="남">남자</option>
+                        <option value="여">여자</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="control">
-                    성별 <input class="input" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요.">
+                    비밀번호 <input class="input is-success" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요.">
                 </div>
                 <div class="control">
-                    비밀번호 <input class="input" id="password" name="password" type="password" placeholder="비밀번호를 입력하세요.">
-                </div>
-                <div class="control">
-                    비밀번호 확인 <input class="input" id="password" name="passwordcheck" type="password" placeholder="비밀번호를 확인하세요.">
+                    비밀번호 확인 <input class="input is-success" id="password" name="passwordcheck" type="password" placeholder="비밀번호를 확인하세요.">
                 </div>
             </section>
             <input type="submit" class="submit-btn"  value="Go →"/>
