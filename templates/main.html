@@ -10,8 +10,18 @@
         table,
         th,
         tr {
-            border: 1px solid black;
+            border: 3px solid cornflowerblue;
             border-collapse: collapse;
+            color: white !important;
+        }
+
+        tr {
+            text-align: center;
+        }
+
+        th {
+            text-align: center;
+            width: 157px;
         }
 
         .tile_title {
@@ -31,6 +41,35 @@
             min-width: 25% !important;
             max-width: 25% !important;
         }
+
+        .tile.is-parent.is-vertical {
+            padding: 0px !important;
+        }
+
+        .slot {
+            height: 600px;
+        }
+
+        label {
+            color: white !important;
+        }
+
+        body {
+            background-color: #303030;
+        }
+
+        #createSession {
+            color: #6ae9a5;
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        header {
+            font-size: 20px;
+            color: white;
+            text-align: end;
+            margin: 5px 8px;
+        }
     </style>
     <script>
         function session() {
@@ -40,6 +79,11 @@
 </head>
 
 <body>
+    <header>
+        <div>
+            <a href="./guide.html" id="userGuide">사용 가이드</a>
+        </div>
+    </header>
     <h1 id="title">FitFriend</h1>
     <main>
         <div id="week_calendar">
@@ -54,7 +98,7 @@
                     <th>Sun</th>
                 </tr>
                 <tr>
-                    <th>
+                    <th class="slot">
                         <div class="tile">
                             <div class="tile is-parent is-vertical">
                                 <article class="tile is-child notification is-primary">
@@ -66,19 +110,19 @@
                         </div>
                         placeholder2
                     </th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th class="slot"></th>
+                    <th class="slot"></th>
+                    <th class="slot"></th>
+                    <th class="slot"></th>
+                    <th class="slot"></th>
+                    <th class="slot"></th>
                 </tr>
             </table>
         </div>
         <hr>
         <div id="make_session">
             <form>
-                <h2 class="header">운동 세션 생성</h2>
+                <h2 class="header" id="createSession">운동 세션 생성</h2>
                 <label for="day" class="label">요일</label>
                 <div class="select is-primary">
                     <select name="day" id="day">
@@ -124,9 +168,7 @@
                 </div>
             </form>
         </div>
-        <div>
-            <a href="guide.html">사용 가이드</a>
-        </div>
+
     </main>
 </body>
 
