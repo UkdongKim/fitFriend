@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css">
     <style>
+        main {
+            width: 1100px;
+            margin: auto;
+            padding: 20px;
+
+        }
+
+        #make_session {
+            width: 500px;
+            margin: auto;
+            padding: 50px;
+        }
+
         table,
         th,
         tr {
@@ -22,7 +35,8 @@
 
         th {
             text-align: center;
-            width: 157px;
+            min-width: 157px;
+            max-width: 157px;
         }
 
         .tile_title {
@@ -64,6 +78,11 @@
             font-weight: bold;
             font-size: 30px;
         }
+
+        .tile {
+            min-width: 155px;
+            max-width: 155px;
+        }
     </style>
     <script>
         function session() {
@@ -74,9 +93,10 @@
 
 <body>
     <header>
-        <div id="userGuide">
-            <a href="./guide.html">사용 가이드</a>
+        <div class="guide-box">
+            <a href="./guide.html" id="userGuide">사용 가이드</a>
         </div>
+
         <div class="title">
             FitFriend
         </div>
