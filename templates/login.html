@@ -22,15 +22,20 @@
         background-color: #303030;
     }
 
-    footer {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-    }
-
-    footer>div {
+    footer > div:nth-child(1) {
         margin: 20px;
         width: 170px;
+        position: absolute;
+        left: 10%;
+        bottom: 0;
+    }
+
+    footer > div:nth-child(2) {
+        margin: 20px;
+        width: 170px;
+        position: absolute;
+        right: 10%;
+        bottom: 0;
     }
 </style>
 
@@ -68,7 +73,7 @@
         <form id="join-form" class="hidden" method="post" action="/join">
             <section class="login-form">
                 <div class="control">
-                    이름 <input class="input is-success" id="username" name="username" type="text"
+                    이름 <input class="input is-success" id="join-username" name="username" type="text"
                         placeholder="이름을 입력하세요.">
                 </div>
                 <div style="display: flex; margin-left: 110px;">
@@ -81,11 +86,11 @@
                     </div>
                 </div>
                 <div class="control">
-                    비밀번호 <input class="input is-success" id="password" name="password" type="password"
+                    비밀번호 <input class="input is-success" id="join-password" name="password" type="password"
                         placeholder="비밀번호를 입력하세요.">
                 </div>
                 <div class="control">
-                    비밀번호 확인 <input class="input is-success" id="password" name="passwordcheck" type="password"
+                    비밀번호 확인 <input class="input is-success" id="join-passwordcheck" name="passwordcheck" type="password"
                         placeholder="비밀번호를 확인하세요.">
                 </div>
             </section>
@@ -111,6 +116,26 @@
         $('#login-form').addClass('hidden');
         $('#login-btn').removeClass('btn-check');
         $('#join-btn').addClass('btn-check');
+    });
+
+    $('#join-form').on('submit', function(e) {
+    var password = $('#join-password').val();
+    var passwordCheck = $('#join-passwordcheck').val();
+    var username = $('#join-username').val();
+
+    console.log(password);
+    console.log(passwordCheck);
+    console.log(username);
+
+    if (password !== passwordCheck) {
+        e.preventDefault();
+        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    }
+
+    if(!username) {
+        e.preventDefault();
+        alert('이름을 작성해주세요.'); 
+    }
     });
 </script>
 

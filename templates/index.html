@@ -111,25 +111,34 @@
         // }
         // window.onload = bringData;
 
-        // function session() {
-        //     let
+        function session() {
+            let day = $("post-day").val();
+            let time = $("post-time").val();
+            let field = $("post-field").val();
+            let max_member = $("post-max_member").val();
+            let comment = $("post-comment").val();
 
-        //         $.ajax({
-        //             type: "POST",
-        //             url: "/sessionDB"
-        //         data: {}
-        //         })
-        // }
-        function makeSession() {
+            $.ajax({
+                type: "POST",
+                url: "/session",
+                data: { day: day, time: time, field: field, max_member: max_member, comment: comment },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+        function makeSession(day) {
             let tempHtml =
                 `<div class="tile">
                 <article class="tile is-child notification is-primary">
-                    <p class="tile_title">${name}</p>
-                    <p class="content">${time}</p>
-                    <p class="content">${exercise} ${1}/${totalMember}</p>
+                    <p class="tile_title">{{session[name]}}</p>
+                    <p class="tile_title">{{session[gender]}}</p>
+                    <p class="content">${("time").val()}</p>
+                    <p class="content">${("#exercise").val()} ${1}/${("max_member").val()}</p>
                 </article>
             </div>`;
-            $("#mon_slot").append(tempHtml)
         }
     </script>
 </head>
@@ -171,7 +180,13 @@
                         </div>
                         placeholder2
                     </th>
-                    <th class="tue_slot"></th>
+                    <th class="tue_slot">
+                        {% for item in session %}
+                        {% if day == '화' %}
+                        makeSession();
+                        {% endif %}
+                        {% endfor }
+                    </th>
                     <th class="wed_slot"></th>
                     <th class="thu_slot"></th>
                     <th class="fri_slot"></th>
@@ -186,7 +201,7 @@
                 <h2 class="header" id="createSession">운동 세션 생성</h2>
                 <!-- <label for="day" class="label">요일</label> -->
                 요일 <div class="select is-primary">
-                    <select name="day" id="day">
+                    <select name="day" id="post-day">
                         <optgroup label="요일을 선택하세요">
                             <option value="mon">월</option>
                             <option value="tue">화</option>
@@ -199,7 +214,7 @@
                     </select>
                 </div>
                 <p></p>
-                시간 <div class="select is-primary">
+                시간 <div class="select is-primary" id="post-time">
                     <!-- <label for="time" class="label">시간</label> -->
                     <select>
                         <optgroup>
@@ -233,7 +248,7 @@
                 <div>
                     <!-- <label for="exercise" class="label">운동 종목</label> -->
                     운동 종목 <div class="select is-primary">
-                        <select name="exercise" id="exercise">
+                        <select name="field" id="post-field">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -244,12 +259,12 @@
                     </div>
                 </div>
                 <div>
-                    <label for="max_people" class="label">최대 인원</label>
-                    <input type="text" id="max_people" class="input is-primary">
+                    <label for="post-max_member" class="label">최대 인원</label>
+                    <input type="text" id="post-max_member" class="input is-primary">
                 </div>
                 <div>
-                    <label for="note" class="label">비고</label>
-                    <textarea id="note" cols="20" rows="2" class="textarea is-primary"></textarea>
+                    <label for="post-comment" class="label">비고</label>
+                    <textarea id="post-note" cols="20" rows="2" class="textarea is-primary"></textarea>
                 </div>
                 <div>
                     <label for="submit" class="label"> </label>
