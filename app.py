@@ -1,9 +1,14 @@
 from flask import Flask, render_template
 from pymongo import MongoClient
+from session import app_session
+
+
 
 app = Flask(__name__)
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
 db = client.test
+
+app.register_blueprint(app_session) # blueprint 등록
 
 
 @app.route('/')
