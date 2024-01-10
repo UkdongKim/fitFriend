@@ -8,11 +8,13 @@ header {
     position: relative;
 }
 
-
-
 .title {
     font-size: 60px;
-    color: deepskyblue;
+    /* color: deepskyblue; */
+    background-image: linear-gradient(to right, blue, skyblue, white);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
     font-weight: bold;
     font-style: italic;
     text-align: center;
@@ -34,6 +36,22 @@ header {
     right: 5%;
 }
 
+#userGuide:hover {
+    font-size: 21px;
+}
+
+.logout {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-size: 35px;
+    cursor: pointer;
+
+    &:hover {
+        font-size: 38px;
+        filter: brightness(1.2);
+    }
+}
 
 .button-box {
     text-align: center;
@@ -71,7 +89,6 @@ header {
     transition: 0.5s;
     cursor: pointer;
 }
-
 
 /* 로그인 회원가입 전환 */
 .hidden {
