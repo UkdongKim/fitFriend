@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/bulma@0.9.2/js/bulma.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <style>
         main {
@@ -68,7 +69,7 @@
             clear: both;
             padding: 10px;
             border-color: white;
-            align-content: right ;
+            align-content: right;
         }
 
         .label {
@@ -106,7 +107,7 @@
             min-width: 155px;
             max-width: 155px;
             position: relative;
-        } 
+        }
 
         /* .notification {
             position: relative;
@@ -123,11 +124,12 @@
             height: 100%;
             cursor: pointer;
 
-        } 
+        }
 
         select {
-           width: 200px; 
+            width: 200px;
         }
+
         input {
             width: 200px !important;
         }
@@ -146,6 +148,10 @@
             border: 2px solid #6ae9a5;
         }
 
+        .hidden_value {
+            display: none;
+        }
+
         /* #textarea {
             display: flex;
             
@@ -154,7 +160,6 @@
         /* #to-be-form { 
             border: 2px solid #6ae9a5; 
         } */
-
     </style>
     <script>
 
@@ -170,7 +175,7 @@
 
         // // GET을 할 수 있는 URL 생성 필요? 
 
-     
+
 
         // function add_tile() {
         //     $(document).ready(function () {
@@ -237,7 +242,7 @@
         // function create_session() {
         //     // let userName = username;
         //     // let userId = userId;
-        //     let day = $("#post-day").val();
+        //     let day = $(#"post-day").val();
         //     let time = $("#post-time").val();
         //     let field = $("#post-field").val();
         //     let max_member = $("#post-max_member").val();
@@ -297,13 +302,65 @@
 
         // // // // 매 분마다 updateOnSunday 함수를 호출하는 setInterval
         // // // setInterval(updateOnSunday, 3600000); // 3600000밀리초(60분) 간격으로 실행
+
+        function participate_session(username, gender, sessionId) {
+            $.ajax({
+                type: 'POST',
+                url: '/session/participate',
+                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("참여되었습니다!");
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
+        function except_session(username, gender, sessionId) {
+            $.ajax({
+                type: 'POST',
+                url: '/session/quit',
+                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("참여 취소되었습니다!");
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
+        function delete_session(username, gender, sessionId) {
+            $.ajax({
+                type: 'PUT',
+                url: '/session/<dession_id>',
+                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("참여 취소되었습니다!");
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
+
     </script>
 </head>
 
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <script>
+                alert("{{messages[0] }}");
+            </script>
+        {% endif %}
+    {% endwith %}
     <header>
+        <div class="logout" onclick="logout()">📤</div>
         <div class="guide-box">
-            <a href="./guide.html" id="userGuide">사용 가이드</a>
+            <a href="{{ url_for('guide')}}" id="userGuide">사용 가이드</a>
         </div>
 
         <div class="title">
@@ -326,15 +383,13 @@
                 <tr>
                     <th class="slot" id="월">
 
-                        {# % if (gender == "남") or (gender =="여") % #}
-
-                        <div class="tile is-parent is-vertical container">
+                        <!-- <div class="tile is-parent is-vertical container">
                             <article class="tile is-child notification is-primary">
-                                <!-- Your tile content here -->
-                                <p class="tile_title">{{name}}</p>
-                                <p class="content">18:00 런닝 </p>
-                                <p class="content">(1/4) </p>
-                                <!-- Modal Structure -->
+                                 Your tile content here -->
+                        <p class="tile_title">{{ name }}</p>
+                        <p class="content">{{ day }} + " " + {{ time }} </p>
+                        <p class="content">{{ field }} + " " + {{ max_member }}</p>
+                        <!-- Modal Structure
                                 <div class="container">
                                     <div id="image-modal" class="modal">
                                         <div class="modal-background"></div>
@@ -343,8 +398,8 @@
                                                 <header class="modal-card-head">
                                                     <p class="modal-card-title">Modal title</p>
                                                 </header>
-                                                <div class="modal-ca  rd-body">
-                                                    <!-- Content ... -->
+                                                <div class="modal-card-body">
+                                                    {{ note }}
                                                 </div>
                                                 <footer class="modal-card-foot">
                                                     <button class="button is-success">Save changes</button>
@@ -357,10 +412,10 @@
                                 </div>
                                 <button class="invisible" id="showModal">Shows</button>
                             </article>
-                        </div>
-                        {# % endif % #}
+                        </div> -->
 
-                        
+
+
 
         </div>
 
@@ -377,10 +432,10 @@
         <br>
         <section class="fill_up">
             <h2 class="header" id="createSession">운동 세션 생성</h2>
-            <div id="to-be-form">
+            <form id="to-be-form" method="post" action="/session">
                 <div class="label">요일<br>
                     <div class="select is-primary">
-                        <select name="day" id="post-day">
+                        <select name="day" id="post-day" placeholder="요일을 선택하세요">
                             <optgroup label="요일을 선택하세요">
                                 <option value="mon">월</option>
                                 <option value="tue">화</option>
@@ -394,8 +449,9 @@
                     </div>
                 </div>
                 <div class="label">
-                    시간 <br><div class="select is-primary">
-                        <select id="post-time">
+                    시간 <br>
+                    <div class="select is-primary">
+                        <select id="post-time" placeholder="시간을 선택하세요" name="time">
                             <!-- optgroup 줄일 수 있나 확인 -->
                             <optgroup>
                                 <option value="1">01:00</option>
@@ -427,8 +483,9 @@
                     </div>
                 </div>
                 <div class="label">
-                    운동 종목 <br><div class="select is-primary">
-                        <select name="field" id="post-field">
+                    운동 종목 <br>
+                    <div class="select is-primary">
+                        <select name="field" id="post-field" placeholder="종목을 선택하세요" name="field">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -438,20 +495,28 @@
                         </select>
                     </div>
                 </div>
-                <div  class="label">
-                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary">
+                <div class="label">
+                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary" placeholder="최대 모집 인원"
+                        name="max_member">
                 </div>
-                <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2" class="textarea is-primary"></textarea>
+                <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
+                        class="textarea is-primary" name="note"></textarea>
                 </div>
+                <div><input name="userName" class="hidden_value" value="{{username}}" /></div>
+                <div><input name="userId" class="hidden_value" value="{{userId}}" /></div>
+                <div><input id="dateInput" name="date" class="hidden_value" /></div>
                 <div class="label">
                     <label for="submit" class="label"> </label>
-                    <button type="button" id="submit" class="button is-primary" onclick="create_session();">세션 생성</button>
+                    <button type="submit" id="submit" class="button is-primary" onclick="create_session();">세션
+                        생성</button>
                 </div>
-            </div>
+            </form>
         </section>
 
 
-
+        <button type="submit" onclick="participate_session(username, gender, 777777);">참여</button>
+        <button type="submit" onclick="except_session(username, gender, 888888);">취소</button>
+        <button type="submit" onclick="delete_session(username, gender, 999999);">삭제</button>
     </main>
 
 </body>
@@ -461,13 +526,32 @@
     var modalDlg = document.querySelector('#image-modal');
     var imageModalCloseBtn = document.querySelector('#image-modal-close');
     btn.addEventListener('click', function () {
-         console.log('hi');
-         modalDlg.classList.add('is-active');
+        console.log('hi');
+        modalDlg.classList.add('is-active');
     });
 
-     imageModalCloseBtn.addEventListener('click', function () {
-         modalDlg.classList.remove('is-active');
-     });
+    imageModalCloseBtn.addEventListener('click', function () {
+        modalDlg.classList.remove('is-active');
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + (date.getDate())).slice(-2);
+        const today = `${year}-${month}-${day}`;
+
+        $("#dateInput").val(today);
+        console.log(today)
+    });
+</script>
+<script>
+    function logout(){
+        $.removeCookie('mytoken');
+        alert('로그아웃되었습니다.')
+        window.location.href='/login'
+    }
 </script>
 
 

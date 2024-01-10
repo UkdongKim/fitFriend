@@ -34,6 +34,14 @@ header {
     right: 5%;
 }
 
+.logout {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-size: 35px;
+    cursor: pointer;
+}
+
 
 .button-box {
     text-align: center;

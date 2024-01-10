@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, make_response, redirect, render_template, Blueprint, request, jsonify, json, url_for
+from flask import Flask, flash, make_response, redirect, render_template, Blueprint, request, jsonify, json, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
@@ -12,6 +12,8 @@ client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1
 db = client.test
 
 app_session = Blueprint('app_session', __name__)
+
+SECRET_KEY = 'MOONUNG'
 
 
 # 세션 생성
@@ -41,22 +43,28 @@ def make_session():
             {'name': userName, 'userId': userId}
         ]
     }
+    print(session)
 
     token = request.cookies.get('token')
-    if token is not None:
-            payload = check_token(token)
-            if payload is None:
-                response = make_response(redirect(url_for("login")))
-                response.set_cookie('token', '', expires=0)   # 쿠키 삭제
-                return response
-    else:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"name": payload['username']})
+        if user_info is not None:
+            db.session.insert_one(session)
+            return redirect(url_for('hello_world'))
+        else:
+            flash("생성할 수 없습니다.")
+            return redirect(url_for('hello_world'))
+    except jwt.ExpiredSignatureError:
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
         response = make_response(redirect(url_for("login")))
         response.set_cookie('token', '', expires=0)   # 쿠키 삭제
         return response
-    
-    result = db.session.insert_one(session)
-
-    return render_template('index.html')
+    except jwt.exceptions.DecodeError:
+        flash("로그인 정보가 존재하지 않습니다. 다시 로그인 해주세요.")
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
 
     # if result.inserted_id:
     #     return jsonify({'success': True, 'message': 'Data inserted success'}), 201
@@ -152,15 +160,11 @@ def get_start_end_of_week(current_date):
 
     return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
 
-# 토큰 검증 메소드
-SECRET_KEY = 'MOONUNG'
-
-def check_token(token):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        if payload['exp'] < datetime.utcnow():
-            payload = None
-    except jwt.exceptions.DecodeError:
-        payload = None
-
-    return payload
+# 로그아웃
+@app.route('/logout', methods=['POST'])
+def logout():
+    token = request.cookies.get('token')
+    flash("로그아웃 되었습니다. 로그인 화면으로 돌아갑니다.")
+    response = make_response(redirect(url_for("login")))
+    response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+    return response
