@@ -358,7 +358,9 @@
         {% endif %}
     {% endwith %}
     <header>
-        <div class="logout" onclick="logout()">📤</div>
+        <div class="logout">
+            <a href="/logout">📤</a>
+        </div>
         <div class="guide-box">
             <a href="{{ url_for('guide')}}" id="userGuide">사용 가이드</a>
         </div>
@@ -546,13 +548,4 @@
         console.log(today)
     });
 </script>
-<script>
-    function logout(){
-        $.removeCookie('mytoken');
-        alert('로그아웃되었습니다.')
-        window.location.href='/login'
-    }
-</script>
-
-
 </html>
