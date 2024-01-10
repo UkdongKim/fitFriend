@@ -3,15 +3,75 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Guide</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../static/css/stylesheet.css">
+    <style>
+        body,
+        html {
+            display: block;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+            clear: both;
+            overflow: hidden;
+            background-color: #303030;
+        }
+
+
+
+        .guide_list {
+            color: white;
+            font-size: 20px;
+            font-weight: normal;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 30px;
+            color: white;
+            text-align: center;
+            margin: 30px auto;
+            font-weight: bold;
+        }
+
+        #break {
+            max-width: 400px;
+            margin: 5px auto;
+        }
+
+        #invisible {
+            background-color: transparent
+        }
+    </style>
 </head>
 
 <body>
-    <h1 id="title">FitFriend</h1>
+    <header>
+        <div class="guide-box">
+            <a href="javascript:javascript:history.go(-1)" id="userGuide">뒤로</a>
+        </div>
+
+        <div class="title">
+            FitFriend
+        </div>
+    </header>
     <main>
-        안녕하세요 사용 가이드입니다.
+        <div>
+            <hr id="invisible">
+            <h2>FitFriend 사용 가이드</h2>
+            <hr id="break">
+            <ul class="guide_list">
+                <li>회원가입을 할 때 이름 + 학생번호로 가입해주세요 (예: 홍길동01) </li>
+                <li>마음에 드는 운동 세션이 있다면 클릭하여 참여해주세요 </li>
+                <li>직접 세션을 주최하고 싶으시면 세션 생성으로 등록해주세요 </li>
+                <li>생성된 세션에 마우스오버를 하면 참여 인원 확인이 가능합니다 </li>
+                <li>세션의 종료 시간은 각자의 일정에 맞춰 유동적으로 진행하시면 됩니다. </li>
+                <li>이제 운동 메이트들과 함께 운동을 즐기면 됩니다 🙂</li>
+            </ul>
+        </div>>
     </main>
 </body>
 
