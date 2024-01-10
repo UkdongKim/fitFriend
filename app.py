@@ -130,5 +130,14 @@ def get_start_end_of_week(current_date):
 
     return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
 
+#로그아웃
+@app.route('/logout')
+def logout():
+    # token = request.cookies.get('token')
+    flash("로그아웃 되었습니다. 로그인 화면으로 돌아갑니다.")
+    response = make_response(redirect(url_for("login")))
+    response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+    return response
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
