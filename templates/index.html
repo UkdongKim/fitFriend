@@ -147,9 +147,9 @@
             border: 2px solid #6ae9a5;
         }
 
-        /* .hidden_value {
+        .hidden_value {
             display: none;
-        } */
+        }
 
         /* #textarea {
             display: flex;
@@ -367,6 +367,28 @@
             });
         }
 
+        // function call_sessionId(userId) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/session/retrive'
+        //         data: { "userId": userId },
+        //         success: function (response) {
+        //             if (response['result'] == 'success') {
+        //                 alert("성공적으로 세션 정보 확인 완료")
+        //                 if (현재 인원 == 최대 인원 ) {
+        //         불가
+        //     } else
+        //     if (로그인ID == 생성자ID) {
+        //         삭제
+        //                     else
+        //         취소
+
+        //     }
+        // }
+        //         }
+        //     })
+        // }
+
 
     </script>
 </head>
@@ -530,10 +552,9 @@
         </section>
 
 
-        <button type="submit"
-            onclick="participate_session('문성준07', '659e435865388c3606d807cd', '659e9045d5c4898cd1352a36');">참여</button>
+        <!-- <button type="submit" onclick="participate_session(username, userId, sessionId);">참여</button>
         <button type="submit" onclick="except_session(username, userId, sessionId);">취소</button>
-        <button type="submit" onclick="delete_session(sessionId);">삭제</button>
+        <button type="submit" onclick="delete_session(sessionId);">삭제</button> -->
     </main>
 
 </body>
