@@ -22,27 +22,35 @@
         background-color: #303030;
     }
 
-    footer {
-        width: 100%;
-        position: relative;
-    }
-
-    footer>div {
-        margin: 20px;
-        width: 170px;
-    }
-
     footer>div:nth-child(1) {
         margin: 20px;
         width: 170px;
+        position: absolute;
+        left: 10%;
+        bottom: 0;
+    }
+
+    footer>div:nth-child(2) {
+        margin: 20px;
+        width: 170px;
+        position: absolute;
+        right: 10%;
+        bottom: 0;
     }
 </style>
 
 <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <script>
+        alert("{{messages[0] }}");
+    </script>
+    {% endif %}
+    {% endwith %}
     <!-- 로고 -->
     <header>
         <div class="guide-box">
-            <a href="./guide.html" id="userGuide">사용 가이드</a>
+            <a href="{{ url_for('guide') }}" id="userGuide">사용 가이드</a>
         </div>
         <div class="title">
             FitFriend
@@ -117,24 +125,41 @@
         $('#join-btn').addClass('btn-check');
     });
 
-    $('#join-form').on('submit', function(e) {
-    var password = $('#join-password').val();
-    var passwordCheck = $('#join-passwordcheck').val();
-    var username = $('#join-username').val();
+    // 회원가입 유효성
+    $('#join-form').on('submit', function (e) {
+        var password = $('#join-password').val();
+        var passwordCheck = $('#join-passwordcheck').val();
+        var username = $('#join-username').val();
 
-    console.log(password);
-    console.log(passwordCheck);
-    console.log(username);
+        console.log(password);
+        console.log(passwordCheck);
+        console.log(username);
 
-    if (password !== passwordCheck) {
-        e.preventDefault();
-        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-    }
+        if (password !== passwordCheck) {
+            e.preventDefault();
+            alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        }
 
-    if(!username) {
-        e.preventDefault();
-        alert('이름을 작성해주세요.'); 
-    }
+        if (!username) {
+            e.preventDefault();
+            alert('이름을 작성해주세요.');
+        }
+    });
+
+    // 로그인 유효성
+    $('#login-form').on('submit', function (e) {
+        var loginName = $('#username').val();
+        var loginPassword = $('#password').val();
+
+        if (!loginName) {
+            e.preventDefault();
+            alert('이름을 작성해주세요.');
+        }
+
+        if (!loginPassword) {
+            e.preventDefault();
+            alert('비밀번호를 작성해주세요.');
+        }
     });
 </script>
 

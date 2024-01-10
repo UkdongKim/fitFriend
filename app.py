@@ -2,6 +2,7 @@ import json
 from flask import Flask, flash, render_template, request, redirect, url_for, session, jsonify, make_response
 from pymongo import MongoClient
 from session import app_session
+from datetime import datetime, timedelta
 from bson import json_util
 import hashlib
 from datetime import timedelta, datetime
@@ -60,8 +61,8 @@ def hello_world():  # put application's code here
 # 로그인
 @app.route('/login', methods=['GET'])
 def login():
-
-    if session:
+    token = request.cookies.get('token')
+    if token:
         return redirect(url_for('hello_world'))
     
     return render_template('login.html')
@@ -77,15 +78,17 @@ def loginOk():
 
     check = db.users.find_one({'name' : username, 'password': pwHash})
 
-    print(check)
-    if check:
-        session['name'] = username
-        if 'gender' in check:
-            session['gender'] = check['gender']
-            # session['_id'] = check['_id']
-        session['gender'] = check['gender']
-        session['userid'] = parse_json(check['_id'])
-        return redirect(url_for('hello_world'))
+    if check is not None:
+        payload = {
+            'username' : username,
+            'password' : pwHash,
+            'exp' : datetime.utcnow() + timedelta(seconds=60)
+        }
+
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        response = make_response(redirect(url_for('hello_world')))
+        response.set_cookie('token', token)
+        return response
     else:
         flash("이름과 비밀번호를 확인해주세요.")
         return render_template('login.html')
@@ -116,6 +119,14 @@ def guide():
     return render_template('guide.html')
 
 
+# 월요일과 일요일 구하기
+def get_start_end_of_week(current_date):
+    # 현재 날짜를 기준으로 해당 주의 시작을 찾음
+    start_of_week = current_date - timedelta(days=current_date.weekday())
+    # 현재 날짜를 기준으로 해당 주의 끝을 찾음 (일요일)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
