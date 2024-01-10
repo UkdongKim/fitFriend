@@ -42,11 +42,6 @@ header {
     justify-content: space-around;
 }
 
-.button-box>button {
-    width: 120px;
-    margin: 0 5px;
-}
-
 .login-form>div {
     font-size: 16px;
     text-align: right;
