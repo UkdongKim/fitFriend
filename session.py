@@ -22,7 +22,7 @@ def make_session():
     time = request.form['time']
     field = request.form['field']
     max_member = request.form['max_member']
-    comment = request.form['comment']
+    note = request.form['note']
     show = True
 
     session = {
@@ -34,7 +34,7 @@ def make_session():
         'field': field,
         'max_member': max_member,
         'show': show,
-        'comment': comment,
+        'note': note,
         'participants': [
             {'name': userName, 'userId': userId}
         ]
