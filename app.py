@@ -91,7 +91,7 @@ def loginOk():
         return response
     else:
         flash("이름과 비밀번호를 확인해주세요.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 회원가입
 @app.route('/join', methods=['POST'])
@@ -105,13 +105,13 @@ def join():
 
     if existUser is not None:
         flash("동일한 이름이 존재합니다.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
     
     elif username != None and gender != None and password != None and password == passwordcheck :
         pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 가이드 이동
 @app.route('/guide')
