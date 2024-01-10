@@ -18,6 +18,7 @@ def make_session():
     userName = request.form['userName']
     userId = request.form['userId']
     day = request.form['day']
+    date = request.form['date']
     time = request.form['time']
     field = request.form['field']
     max_member = request.form['max_member']
@@ -28,6 +29,7 @@ def make_session():
         'userName': userName,
         'userId': userId,
         'day': day,
+        'date' : date,
         'time': time,
         'field': field,
         'max_member': max_member,
@@ -63,8 +65,7 @@ def select_session():
     for i in sessionList:
         print(i)
 
-    return {"result": "success",
-            "items": json.loads(json.dumps(sessionList, default=str))}, 200
+    return {"result" : "success"}, 200
 
 
 # 세션 참여 등록
