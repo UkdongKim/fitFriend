@@ -1,12 +1,19 @@
 import json
-from flask import Flask, flash, render_template, request, redirect, url_for, session
+from flask import Flask, flash, render_template, request, redirect, url_for, session, jsonify, make_response
 from pymongo import MongoClient
 from session import app_session
 from bson import json_util
+import hashlib
+from datetime import timedelta, datetime
+from flask_jwt_extended import JWTManager, decode_token
+import jwt
 
 
 app = Flask(__name__)
-app.secret_key = 'moon'
+app.secret_key = 'MOONUNG'
+SECRET_KEY = 'MOONUNG'
+jwt_manager = JWTManager(app)
+
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
 db = client.test
 
@@ -17,14 +24,43 @@ def parse_json(data):
 
 @app.route('/')
 def hello_world():  # put application's code here
-    if not session:
-        return redirect(url_for('login'))
-    
-    return render_template("index.html")
+    token = request.cookies.get('token')
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        print(payload['username'])
+        print(payload['password'])
+        user_info = db.users.find_one({"name": payload['username']})
+
+        current_date = datetime.now()
+        start_of_week, end_of_week = get_start_end_of_week(current_date)
+
+        sessionList = db.session.find({
+            'day': {'$gte': start_of_week, '$lte': end_of_week},
+            'show': True
+        }).sort({
+            'day': 1,
+            'time': 1
+        })
+        for i in sessionList:
+            print(i)
+        result = list(sessionList)
+        return render_template('index.html', username=user_info['name'], gender=user_info['gender'], sessionDataList=result)
+    except jwt.ExpiredSignatureError:
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
+    except jwt.exceptions.DecodeError:
+        flash("로그인 정보가 존재하지 않습니다. 다시 로그인 해주세요.")
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
+
 
 # 로그인
 @app.route('/login', methods=['GET'])
 def login():
+
     if session:
         return redirect(url_for('hello_world'))
     
@@ -36,11 +72,17 @@ def login():
 def loginOk():
     username = request.form['username']
     password = request.form['password']
-    check = db.users.find_one({'name' : username, 'password': password})
+
+    pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+    check = db.users.find_one({'name' : username, 'password': pwHash})
 
     print(check)
     if check:
         session['name'] = username
+        if 'gender' in check:
+            session['gender'] = check['gender']
+            # session['_id'] = check['_id']
         session['gender'] = check['gender']
         session['userid'] = parse_json(check['_id'])
         return redirect(url_for('hello_world'))
@@ -60,11 +102,18 @@ def join():
 
     if existUser is not None:
         flash("동일한 이름이 존재합니다.")
+        return render_template('login.html')
     
     elif username != None and gender != None and password != None and password == passwordcheck :
-        db.users.insert_one({'name': username, 'password': password, 'gender': gender})
+        pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
         return render_template('login.html')
+
+# 가이드 이동
+@app.route('/guide')
+def guide():
+    return render_template('guide.html')
 
 
 
