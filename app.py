@@ -95,7 +95,7 @@ def loginOk():
         return response
     else:
         flash("이름과 비밀번호를 확인해주세요.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 회원가입
 @app.route('/join', methods=['POST'])
@@ -109,13 +109,13 @@ def join():
 
     if existUser is not None:
         flash("동일한 이름이 존재합니다.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
     
     elif username != None and gender != None and password != None and password == passwordcheck :
         pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 가이드 이동
 @app.route('/guide')
@@ -131,6 +131,15 @@ def get_start_end_of_week(current_date):
     end_of_week = start_of_week + timedelta(days=6)
 
     return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
+
+#로그아웃
+@app.route('/logout')
+def logout():
+    # token = request.cookies.get('token')
+    flash("로그아웃 되었습니다. 로그인 화면으로 돌아갑니다.")
+    response = make_response(redirect(url_for("login")))
+    response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+    return response
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
