@@ -12,7 +12,11 @@ header {
 
 .title {
     font-size: 60px;
-    color: deepskyblue;
+    /* color: deepskyblue; */
+    background-image: linear-gradient(to right, blue, skyblue, white);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
     font-weight: bold;
     font-style: italic;
     text-align: center;
@@ -34,12 +38,21 @@ header {
     right: 5%;
 }
 
+#userGuide:hover {
+    font-size: 21px;
+}
+
 .logout {
     position: absolute;
     top: 5%;
     left: 10%;
     font-size: 35px;
     cursor: pointer;
+
+    &:hover {
+        font-size: 38px;
+        filter: brightness(1.2);
+    }
 }
 
 

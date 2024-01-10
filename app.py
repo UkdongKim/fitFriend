@@ -84,7 +84,7 @@ def loginOk():
             'userid' : str(check['_id']),
             'username' : username,
             'password' : pwHash,
-            'exp' : datetime.utcnow() + timedelta(seconds=60)
+            'exp' : datetime.utcnow() + timedelta(seconds=120)
         }
 
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
