@@ -163,7 +163,7 @@
     <script>
 
         //  로딩 후 바로 현재 있는 운동세션들 모두 보여줌 
-        // window.onload = start; //, login_info;
+        window.onload = todayDate; //, login_info;
 
         // //로그인 정보 받아와야 함 (이후 session함수를 사용하기 위해 필요)
         // // function login_info() {
@@ -305,6 +305,20 @@
 
         // // // // 매 분마다 updateOnSunday 함수를 호출하는 setInterval
         // // // setInterval(updateOnSunday, 3600000); // 3600000밀리초(60분) 간격으로 실행
+        function todayDate() {
+            var fullDate = new Date(date),
+                month = '' + (fullDate.getMonth() + 1),
+                day = '' + fullDate.getDate(),
+                year = fullDate.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day];
+        }
+
 
         function participate_session(username, userid, sessionId) {
             $.ajax({
@@ -315,6 +329,9 @@
                     if (response['result'] == 'success') {
                         alert("참여되었습니다!");
                         window.location.reload()
+                    }
+                    if (response['result'] == 'fail') {
+                        alert(response["msg"]);
                     }
                 }
             });
@@ -329,19 +346,21 @@
                     if (response['result'] == 'success') {
                         alert("참여 취소되었습니다!");
                         window.location.reload()
+                    } else {
+                        alert("업데이트 실패");
                     }
                 }
             });
         }
 
-        function delete_session(username, userid, sessionId) {
+        function delete_session(sessionId) {
             $.ajax({
                 type: 'PUT',
-                url: '/session/<dession_id>',
-                data: { "userName": username, "userId": userid, "sessionId": sessionId },
+                url: '/session/'sessionId'',
+                data: {},
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        alert("참여 취소되었습니다!");
+                        alert("세션 삭제되었습니다!");
                         window.location.reload()
                     }
                 }
@@ -500,7 +519,7 @@
                     </div>
                     <div><input name="userName" class="hidden_value" value="{{ username }}" /></div>
                     <div><input name="userId" class="hidden_value" value="1234565789" /></div>
-                    <div><input name="date" class="hidden_value" value="20240109" /></div>
+                    <div><input name="date" class="hidden_value" value="todayDate();" /></div>
                     <div class="label">
                         <label for="submit" class="label"> </label>
                         <button type="submit" id="submit" class="button is-primary">세션
@@ -510,9 +529,10 @@
         </section>
 
 
-        <button type="submit" onclick="participate_session('홍길동', '04', '659e50a2df698e0951c0fdab');">참여</button>
+        <button type="submit"
+            onclick="participate_session('문성준07', '659e435865388c3606d807cd', '659e9045d5c4898cd1352a36');">참여</button>
         <button type="submit" onclick="except_session(username, gender, 888888);">취소</button>
-        <button type="submit" onclick="delete_session(username, gender, 999999);">삭제</button>
+        <button type="submit" onclick="delete_session(999999);">삭제</button>
     </main>
 
 </body>
