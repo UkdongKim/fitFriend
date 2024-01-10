@@ -324,53 +324,48 @@
                     <th>Sun</th>
                 </tr>
                 <tr>
-                    <th class="slot" id="월">
 
-                        {# % if (gender == "남") or (gender =="여") % #}
+{#        조회           #}
+        {% set days = ['MON', 'TUE', 'WED', 'THURS' , 'FRI', 'SAT', 'SUN'] %}
 
-                        <div class="tile is-parent is-vertical container">
-                            <article class="tile is-child notification is-primary">
-                                <!-- Your tile content here -->
-                                <p class="tile_title">{{name}}</p>
-                                <p class="content">18:00 런닝 </p>
-                                <p class="content">(1/4) </p>
-                                <!-- Modal Structure -->
-                                <div class="container">
-                                    <div id="image-modal" class="modal">
-                                        <div class="modal-background"></div>
-                                        <div class="modal-content">
-                                            <div class="modal-card">
-                                                <header class="modal-card-head">
-                                                    <p class="modal-card-title">Modal title</p>
-                                                </header>
-                                                <div class="modal-ca  rd-body">
-                                                    <!-- Content ... -->
-                                                </div>
-                                                <footer class="modal-card-foot">
-                                                    <button class="button is-success">Save changes</button>
-                                                </footer>
+        {% for day in days %}
+
+            <th class="slot" id={{ day }} >
+                            <div class="tile is-parent is-vertical">
+                                {% for item in sessionDataList %}
+                                    {% if item.day == day %}
+
+                                        {#  participates 문자열 만들기  #}
+                                        {% set participates = '' %}
+                                        {% for participant in item.participants %}
+                                            {% set participates = participates + participant.name + ' ' %}
+                                        {% endfor %}
+
+                                        <article class="tile is-child notification is-primary article" style="cursor:pointer;">
+                                            <!-- Your tile content here -->
+                                            <p class="content">{{item.userName}}</p>
+                                            <p class="content">{{ item.time }}시 {{ item.field}} </p>
+                                            <p class="content"><span>{{ item.participants|count}}</span>명 / <span>{{ item.max_member }}</span>명 </p>
+                                            <input type="text" value="{{ item._id }}">
+                                            <div class="hover_box" style="border: 1px solid azure">
+                                                <span class="middle_title">참여자 명단</span>
+                                                {% for participant in item.participants %}
+                                                    <div>{{ participant.name }}</div>
+                                                {% endfor %}
                                             </div>
-                                        </div>
-                                    <button id="image-modal-close" class="modal-close"></button>
-                                    </div>
-                                    
-                                </div>
-                                <button class="invisible" id="showModal">Shows</button>
-                            </article>
-                        </div>
-                        {# % endif % #}
-
-                        
-
-        </div>
-
+                                        </article>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
         </th>
-        <th class="slot" id="화"></th>
-        <th class="slot" id="수"></th>
-        <th class="slot" id="목"></th>
-        <th class="slot" id="금"></th>
-        <th class="slot" id="토"></th>
-        <th class="slot" id="일"></th>
+        {% endfor %}
+
+{#        <th class="slot" id="화"></th>#}
+{#        <th class="slot" id="수"></th>#}
+{#        <th class="slot" id="목"></th>#}
+{#        <th class="slot" id="금"></th>#}
+{#        <th class="slot" id="토"></th>#}
+{#        <th class="slot" id="일"></th>#}
         </tr>
         </table>
         </div>
@@ -450,24 +445,120 @@
             </div>
         </section>
 
+        <div style="color: white">
+            {{ sessionDataList[0].userName }}
+        </div>
 
+
+        <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <!-- Any other Bulma elements you want -->
+                <div class="card">
+                    <div class="card-content">
+                        <div class="content">
+                            <h3 id="modal_title"></h3>
+                            <button id="modal_cancel" class="button is-primary is-light">취소</button>
+                            <button id="modal_ok" class="button is-primary is-light">확인</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <button id="close" class="modal-close is-large" aria-label="close"></button>
+        </div>
 
     </main>
 
 </body>
 
 <script>
-    var btn = document.querySelector('#showModal');
-    var modalDlg = document.querySelector('#image-modal');
-    var imageModalCloseBtn = document.querySelector('#image-modal-close');
-    btn.addEventListener('click', function () {
-         console.log('hi');
-         modalDlg.classList.add('is-active');
-    });
 
-     imageModalCloseBtn.addEventListener('click', function () {
-         modalDlg.classList.remove('is-active');
-     });
+    let articles = document.querySelectorAll('.article');
+    for(let i = 0; i < articles.length; i++){
+        articles[i].addEventListener('click', (e) => {
+            document.querySelector('.modal').classList.add('is-active');
+            clickSession(e);
+        })
+    }
+
+    let close = document.querySelector('#close');
+    let modal_cancel = document.querySelector('#modal_cancel');
+
+    close.addEventListener('click', () => {
+        document.querySelector('.modal').classList.remove('is-active');
+    })
+
+    modal_cancel.addEventListener('click', () => {
+        document.querySelector('.modal').classList.remove('is-active');
+    })
+
+
+
+    let modal_title = document.querySelector('#modal_title');
+    let modal_ok = document.querySelector('#modal_ok');
+
+    function clickSession(e){
+        // 모달 생길 때 분기처리 하기
+        let loginUserName = '{{ username }}';
+        let createUserName;
+        let currentNum;
+        let maxNum;
+        let selectedSessionId;
+        let selectedParticipates  = [];
+
+        createUserName = e.target.children[0].innerText;
+        currentNum = e.target.children[2].children[0].innerText;
+        maxNum = e.target.children[2].children[1].innerText;
+        selectedSessionId = e.target.children[3].value;
+
+        let participationNumber = e.target.children[4].children.length;
+
+        for(let i = 1; i < e.target.children[4].children.length; i++){
+            selectedParticipates.push(e.target.children[4].children[i].innerText);
+        }
+
+        // #1 참여인원 리스트에 로그인 유저가 없고 자리가 남아 있을 때 => 참여 모달
+        if(selectedParticipates.indexOf(loginUserName) && maxNum > currentNum){
+            modal_title.innerText = '참여하겠습니까?';
+            modal_ok.addEventListener('click', () => {
+                alert('참여모달 실행');
+            })
+        }
+
+        // #2 참여인원 리스트에 로그인 유저가 없고 자리가 없을 때 => 불가
+        if(selectedParticipates.indexOf(loginUserName) === -1 && maxNum <= currentNum){
+            modal_title.innerText = '모두 마감 되었습니다.';
+            modal_ok.addEventListener('click', () => {
+                alert('모두 마감 되었습니다.');
+            })
+        }
+
+        // #3 참여인원 리스트에 로그인 유저가 있는 경우[0번 째 생성자] => 삭제 모달
+        if(selectedParticipates.indexOf(loginUserName) === 0){
+            modal_title.innerText = '운동 세션을 삭제하시겠습니까?';
+            modal_ok.addEventListener('click', () => {
+                alert('삭제모달 실행');
+            })
+        }
+
+        // #4 참여인원 리스트에 로그인 유저가 있는 경우 => 참여 취소 모달
+        if(selectedParticipates.indexOf(loginUserName) >= 1){
+            modal_title.innerText = '운동 세션을 취소하시겠습니까?';
+            modal_ok.addEventListener('click', () => {
+                alert('취소모달 실행');
+            })
+        }
+
+
+
+
+    }
+
+
+
+
+
 </script>
 
 

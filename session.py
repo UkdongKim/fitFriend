@@ -55,7 +55,7 @@ def select_session():
     start_of_week, end_of_week = get_start_end_of_week(current_date)
 
     sessionList = db.session.find({
-        'day': {'$gte': start_of_week, '$lte': end_of_week},
+        'date': {'$gte': start_of_week, '$lte': end_of_week},
         'show': True
     }).sort({
         'day': 1,

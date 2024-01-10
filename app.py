@@ -36,15 +36,19 @@ def hello_world():  # put application's code here
         start_of_week, end_of_week = get_start_end_of_week(current_date)
 
         sessionList = db.session.find({
-            'day': {'$gte': start_of_week, '$lte': end_of_week},
+            'date': {'$gte': start_of_week, '$lte': end_of_week},
             'show': True
         }).sort({
             'day': 1,
             'time': 1
         })
+
+        result = []
+
         for i in sessionList:
+            result.append(i)
             print(i)
-        result = list(sessionList)
+
         return render_template('index.html', username=user_info['name'], gender=user_info['gender'], sessionDataList=result)
     except jwt.ExpiredSignatureError:
         flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
