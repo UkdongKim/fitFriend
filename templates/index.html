@@ -395,11 +395,11 @@
 
 <body>
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <script>
-                alert("{{messages[0] }}");
-            </script>
-        {% endif %}
+    {% if messages %}
+    <script>
+        alert("{{messages[0] }}");
+    </script>
+    {% endif %}
     {% endwith %}
     <header>
         <div class="logout">
