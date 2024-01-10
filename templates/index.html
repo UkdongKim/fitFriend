@@ -451,13 +451,13 @@
                     <div class="select is-primary">
                         <select name="day" id="post-day" placeholder="요일을 선택하세요">
                             <optgroup label="요일을 선택하세요">
-                                <option value="mon">월</option>
-                                <option value="tue">화</option>
-                                <option value="wed">수</option>
-                                <option value="thu">목</option>
-                                <option value="fri">금</option>
-                                <option value="sat">토</option>
-                                <option value="sun">일</option>
+                                <option value="MON">월</option>
+                                <option value="TUES">화</option>
+                                <option value="WED">수</option>
+                                <option value="THURS">목</option>
+                                <option value="FRI">금</option>
+                                <option value="SAT">토</option>
+                                <option value="SUN">일</option>
                             </optgroup>
                         </select>
                     </div>
@@ -531,8 +531,8 @@
 
         <button type="submit"
             onclick="participate_session('문성준07', '659e435865388c3606d807cd', '659e9045d5c4898cd1352a36');">참여</button>
-        <button type="submit" onclick="except_session(username, gender, 888888);">취소</button>
-        <button type="submit" onclick="delete_session(999999);">삭제</button>
+        <button type="submit" onclick="except_session(username, userId, sessionId);">취소</button>
+        <button type="submit" onclick="delete_session(sessionId);">삭제</button>
     </main>
 
 </body>
