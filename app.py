@@ -15,7 +15,12 @@ app.secret_key = 'MOONUNG'
 SECRET_KEY = 'MOONUNG'
 jwt_manager = JWTManager(app)
 
+#local
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
+
+#aws
+# client = MongoClient('localhost:27017', username='dbadmin', password='admin1234')
+
 db = client.test
 
 app.register_blueprint(app_session) # blueprint 등록
@@ -43,9 +48,13 @@ def hello_world():  # put application's code here
             'day': 1,
             'time': 1
         })
+
+        result = []
+
         for i in sessionList:
+            result.append(i)
             print(i)
-        result = list(sessionList)
+
         return render_template('index.html', username=user_info['name'], gender=user_info['gender'], userId=str(user_info['_id']), sessionDataList=result)
     except jwt.ExpiredSignatureError:
         flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
@@ -84,7 +93,7 @@ def loginOk():
             'userid' : str(check['_id']),
             'username' : username,
             'password' : pwHash,
-            'exp' : datetime.utcnow() + timedelta(seconds=60)
+            'exp' : datetime.utcnow() + timedelta(seconds=300)
         }
 
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')

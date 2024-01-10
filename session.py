@@ -8,7 +8,11 @@ from flask_jwt_extended import JWTManager, decode_token
 import jwt
 
 app = Flask(__name__)
+#local
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
+
+#aws
+# client = MongoClient('localhost:27017', username='dbadmin', password='admin1234')
 db = client.test
 
 app_session = Blueprint('app_session', __name__)
