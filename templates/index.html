@@ -303,7 +303,7 @@
 <body>
     <header>
         <div class="guide-box">
-            <a href="./guide.html" id="userGuide">사용 가이드</a>
+            <a href="{{ url_for('guide')}}" id="userGuide">사용 가이드</a>
         </div>
 
         <div class="title">
@@ -377,10 +377,10 @@
         <br>
         <section class="fill_up">
             <h2 class="header" id="createSession">운동 세션 생성</h2>
-            <div id="to-be-form">
+            <form id="to-be-form" method="post" action="/session">
                 <div class="label">요일<br>
                     <div class="select is-primary">
-                        <select name="day" id="post-day">
+                        <select name="day" id="post-day" placeholder="요일을 선택하세요">
                             <optgroup label="요일을 선택하세요">
                                 <option value="mon">월</option>
                                 <option value="tue">화</option>
@@ -395,7 +395,7 @@
                 </div>
                 <div class="label">
                     시간 <br><div class="select is-primary">
-                        <select id="post-time">
+                        <select id="post-time" placeholder="시간을 선택하세요">
                             <!-- optgroup 줄일 수 있나 확인 -->
                             <optgroup>
                                 <option value="1">01:00</option>
@@ -428,7 +428,7 @@
                 </div>
                 <div class="label">
                     운동 종목 <br><div class="select is-primary">
-                        <select name="field" id="post-field">
+                        <select name="field" id="post-field" placeholder="종목을 선택하세요">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -439,7 +439,7 @@
                     </div>
                 </div>
                 <div  class="label">
-                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary">
+                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary" placeholder="최대 모집 인원">
                 </div>
                 <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2" class="textarea is-primary"></textarea>
                 </div>
