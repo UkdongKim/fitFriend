@@ -11,7 +11,7 @@ import jwt
 
 app = Flask(__name__)
 app.secret_key = 'MOONUNG'
-app.
+
 
 SECRET_KEY = 'MOONUNG'
 
@@ -99,8 +99,11 @@ def join():
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
         return render_template('login.html')
-
-
+    
+# 가이드 이동
+@app.route('/guide')
+def guide():
+    return render_template('guide.html')
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
