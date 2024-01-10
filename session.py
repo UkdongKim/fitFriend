@@ -1,15 +1,19 @@
 import logging
 
-from flask import Flask, render_template, Blueprint, request, jsonify, json
+from flask import Flask, flash, make_response, redirect, render_template, Blueprint, request, jsonify, json, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+from flask_jwt_extended import JWTManager, decode_token
+import jwt
 
 app = Flask(__name__)
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
 db = client.test
 
 app_session = Blueprint('app_session', __name__)
+
+SECRET_KEY = 'MOONUNG'
 
 
 # 세션 생성
@@ -39,13 +43,33 @@ def make_session():
             {'name': userName, 'userId': userId}
         ]
     }
+    print(session)
 
-    result = db.session.insert_one(session)
+    token = request.cookies.get('token')
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"name": payload['username']})
+        if user_info is not None:
+            db.session.insert_one(session)
+            return redirect(url_for('hello_world'))
+        else:
+            flash("생성할 수 없습니다.")
+            return redirect(url_for('hello_world'))
+    except jwt.ExpiredSignatureError:
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
+    except jwt.exceptions.DecodeError:
+        flash("로그인 정보가 존재하지 않습니다. 다시 로그인 해주세요.")
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
 
-    if result.inserted_id:
-        return jsonify({'success': True, 'message': 'Data inserted success'}), 201
-    else:
-        return jsonify({'success': False, 'message': 'Failed to insert data'}), 500
+    # if result.inserted_id:
+    #     return jsonify({'success': True, 'message': 'Data inserted success'}), 201
+    # else:
+    #     return jsonify({'success': False, 'message': 'Failed to insert data'}), 500
 
 
 # 세션 조회

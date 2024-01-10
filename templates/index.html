@@ -68,7 +68,7 @@
             clear: both;
             padding: 10px;
             border-color: white;
-            align-content: right ;
+            align-content: right;
         }
 
         .label {
@@ -146,6 +146,10 @@
             border: 2px solid #6ae9a5;
         }
 
+        .hidden_value {
+            display: none;
+        }
+
         /* #textarea {
             display: flex;
             
@@ -154,12 +158,11 @@
         /* #to-be-form { 
             border: 2px solid #6ae9a5; 
         } */
-
     </style>
     <script>
 
         //  로딩 후 바로 현재 있는 운동세션들 모두 보여줌 
-        // window.onload = add_tile; //, login_info;
+        // window.onload = todayDate; //, login_info;
 
         // //로그인 정보 받아와야 함 (이후 session함수를 사용하기 위해 필요)
         // // function login_info() {
@@ -170,13 +173,17 @@
 
         // // GET을 할 수 있는 URL 생성 필요? 
 
-     
 
-        // function add_tile() {
+
+        // function start() {
         //     $(document).ready(function () {
-        //         if ("{{session['name']}}" != "");
-        //         alert("{{session['gender']}}");
+        //         if ("{{session['name']}}" != ""); {
+        //             const str = "{{session['name']}}"
+        //             name = str.split();
+
+        //         }
         //     })
+        // }
 
         //     // $('#월').empty()
         //     // $('#화').empty()
@@ -237,7 +244,7 @@
         // function create_session() {
         //     // let userName = username;
         //     // let userId = userId;
-        //     let day = $("#post-day").val();
+        //     let day = $(#"post-day").val();
         //     let time = $("#post-time").val();
         //     let field = $("#post-field").val();
         //     let max_member = $("#post-max_member").val();
@@ -297,6 +304,91 @@
 
         // // // // 매 분마다 updateOnSunday 함수를 호출하는 setInterval
         // // // setInterval(updateOnSunday, 3600000); // 3600000밀리초(60분) 간격으로 실행
+        // function todayDate() {
+        //     var fullDate = new Date(date),
+        //         month = '' + (fullDate.getMonth() + 1),
+        //         day = '' + fullDate.getDate(),
+        //         year = fullDate.getFullYear();
+
+        //     if (month.length < 2)
+        //         month = '0' + month;
+        //     if (day.length < 2)
+        //         day = '0' + day;
+
+        //     return [year, month, day];
+        // }
+
+
+        function participate_session(username, userid, sessionId) {
+            $.ajax({
+                type: 'POST',
+                url: '/session/participate',
+                data: { "userName": username, "userId": userid, "sessionId": sessionId },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("참여되었습니다!");
+                        window.location.reload()
+                    }
+                    if (response['result'] == 'fail') {
+                        alert(response["msg"]);
+                    }
+                }
+            });
+        }
+
+        function except_session(username, userid, sessionId) {
+            $.ajax({
+                type: 'POST',
+                url: '/session/quit',
+                data: { "userName": username, "userId": userid, "sessionId": sessionId },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("참여 취소되었습니다!");
+                        window.location.reload()
+                    } else {
+                        alert("업데이트 실패");
+                    }
+                }
+            });
+        }
+
+        function delete_session(sessionId) {
+            $.ajax({
+                type: 'PUT',
+                url: '/session/' + sessionId,
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("세션 삭제되었습니다!");
+                        window.location.reload()
+                    }
+                }
+            });
+        }
+
+        // function call_sessionId(userId) {
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/session/retrive'
+        //         data: { "userId": userId },
+        //         success: function (response) {
+        //             if (response['result'] == 'success') {
+        //                 alert("성공적으로 세션 정보 확인 완료")
+        //                 if (현재 인원 == 최대 인원 ) {
+        //         불가
+        //     } else
+        //     if (로그인ID == 생성자ID) {
+        //         삭제
+        //                     else
+        //         취소
+
+        //     }
+        // }
+        //         }
+        //     })
+        // }
+
+
     </script>
 </head>
 
@@ -313,7 +405,7 @@
             <a href="/logout">📤</a>
         </div>
         <div class="guide-box">
-            <a href="./guide.html" id="userGuide">사용 가이드</a>
+            <a href="{{ url_for('guide')}}" id="userGuide">사용 가이드</a>
         </div>
 
         <div class="title">
@@ -382,25 +474,26 @@
         <br>
         <section class="fill_up">
             <h2 class="header" id="createSession">운동 세션 생성</h2>
-            <div id="to-be-form">
+            <form id="to-be-form" method="post" action="/session">
                 <div class="label">요일<br>
                     <div class="select is-primary">
-                        <select name="day" id="post-day">
+                        <select name="day" id="post-day" placeholder="요일을 선택하세요">
                             <optgroup label="요일을 선택하세요">
-                                <option value="mon">월</option>
-                                <option value="tue">화</option>
-                                <option value="wed">수</option>
-                                <option value="thu">목</option>
-                                <option value="fri">금</option>
-                                <option value="sat">토</option>
-                                <option value="sun">일</option>
+                                <option value="MON">월</option>
+                                <option value="TUES">화</option>
+                                <option value="WED">수</option>
+                                <option value="THURS">목</option>
+                                <option value="FRI">금</option>
+                                <option value="SAT">토</option>
+                                <option value="SUN">일</option>
                             </optgroup>
                         </select>
                     </div>
                 </div>
                 <div class="label">
-                    시간 <br><div class="select is-primary">
-                        <select id="post-time">
+                    시간 <br>
+                    <div class="select is-primary">
+                        <select id="post-time" placeholder="시간을 선택하세요" name="time">
                             <!-- optgroup 줄일 수 있나 확인 -->
                             <optgroup>
                                 <option value="1">01:00</option>
@@ -432,8 +525,9 @@
                     </div>
                 </div>
                 <div class="label">
-                    운동 종목 <br><div class="select is-primary">
-                        <select name="field" id="post-field">
+                    운동 종목 <br>
+                    <div class="select is-primary">
+                        <select name="field" id="post-field" placeholder="종목을 선택하세요">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -442,22 +536,25 @@
                             </optgroup>
                         </select>
                     </div>
+
                 </div>
-                <div  class="label">
-                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary">
-                </div>
-                <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2" class="textarea is-primary"></textarea>
                 </div>
                 <div class="label">
-                    <label for="submit" class="label"> </label>
-                    <button type="button" id="submit" class="button is-primary" onclick="create_session();">세션 생성</button>
-                </div>
-            </div>
+                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary" placeholder="최대 모집 인원"
+                        name="max_member">
+                    <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
+                            class="textarea is-primary" name="note"></textarea>
+                    </div>
+                    <div><input name="userName" class="hidden_value" value="{{ username }}" /></div>
+                    <div><input name="userId" class="hidden_value" value="{{ userId }}" /></div>
+                    <div><input name="date" class="hidden_value" id='dateInput' /></div>
+                    <div class="label">
+                        <label for="submit" class="label"> </label>
+                        <button type="submit" id="submit" class="button is-primary">세션
+                            생성</button>
+                    </div>
+            </form>
         </section>
-
-        <div style="color: white">
-            {{ sessionDataList[0].userName }}
-        </div>
 
 
         <div class="modal">
@@ -570,6 +667,17 @@
 
 
 </script>
+<script>
+    $(document).ready(function () {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2);
+        const day = ('0' + (date.getDate())).slice(-2);
+        const today = `${year}${month}${day}`;
 
+        $("#dateInput").val(today);
+        console.log(today)
+    });
+</script>
 
 </html>
