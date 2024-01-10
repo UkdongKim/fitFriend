@@ -147,9 +147,9 @@
             border: 2px solid #6ae9a5;
         }
 
-        .hidden_value {
+        /* .hidden_value {
             display: none;
-        }
+        } */
 
         /* #textarea {
             display: flex;
@@ -163,7 +163,7 @@
     <script>
 
         //  로딩 후 바로 현재 있는 운동세션들 모두 보여줌 
-        // window.onload = add_tile; //, login_info;
+        // window.onload = start; //, login_info;
 
         // //로그인 정보 받아와야 함 (이후 session함수를 사용하기 위해 필요)
         // // function login_info() {
@@ -176,11 +176,15 @@
 
 
 
-        // function add_tile() {
+        // function start() {
         //     $(document).ready(function () {
-        //         if ("{{session['name']}}" != "");
-        //         alert("{{session['gender']}}");
+        //         if ("{{session['name']}}" != ""); {
+        //             const str = "{{session['name']}}"
+        //             name = str.split();
+
+        //         }
         //     })
+        // }
 
         //     // $('#월').empty()
         //     // $('#화').empty()
@@ -302,11 +306,11 @@
         // // // // 매 분마다 updateOnSunday 함수를 호출하는 setInterval
         // // // setInterval(updateOnSunday, 3600000); // 3600000밀리초(60분) 간격으로 실행
 
-        function participate_session(username, gender, sessionId) {
+        function participate_session(username, userid, sessionId) {
             $.ajax({
                 type: 'POST',
                 url: '/session/participate',
-                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                data: { "userName": username, "userId": userid, "sessionId": sessionId },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert("참여되었습니다!");
@@ -316,11 +320,11 @@
             });
         }
 
-        function except_session(username, gender, sessionId) {
+        function except_session(username, userid, sessionId) {
             $.ajax({
                 type: 'POST',
                 url: '/session/quit',
-                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                data: { "userName": username, "userId": userid, "sessionId": sessionId },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert("참여 취소되었습니다!");
@@ -330,11 +334,11 @@
             });
         }
 
-        function delete_session(username, gender, sessionId) {
+        function delete_session(username, userid, sessionId) {
             $.ajax({
                 type: 'PUT',
                 url: '/session/<dession_id>',
-                data: { "userName": username, "gender": gender, "sessionId": sessionId },
+                data: { "userName": username, "userId": userid, "sessionId": sessionId },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert("참여 취소되었습니다!");
@@ -426,7 +430,7 @@
             <form id="to-be-form" method="post" action="/session">
                 <div class="label">요일<br>
                     <div class="select is-primary">
-                        <select name="day" id="post-day" namee="day" placeholder="요일을 선택하세요">
+                        <select name="day" id="post-day" placeholder="요일을 선택하세요">
                             <optgroup label="요일을 선택하세요">
                                 <option value="mon">월</option>
                                 <option value="tue">화</option>
@@ -476,7 +480,7 @@
                 <div class="label">
                     운동 종목 <br>
                     <div class="select is-primary">
-                        <select name="field" id="post-field" placeholder="종목을 선택하세요" name="field">
+                        <select name="field" id="post-field" placeholder="종목을 선택하세요">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -485,26 +489,28 @@
                             </optgroup>
                         </select>
                     </div>
+
+                </div>
                 </div>
                 <div class="label">
                     최대 인원 <br><input type="text" id="post-max_member" class="input is-primary" placeholder="최대 모집 인원"
                         name="max_member">
-                </div>
-                <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
-                        class="textarea is-primary" name="note"></textarea>
-                </div>
-                <div><input name="userName" class="hidden_value" value="{{name}}" /></div>
-                <div><input name="userId" class="hidden_value" value="{{gender}}" /></div>
-                <div class="label">
-                    <label for="submit" class="label"> </label>
-                    <button type="button" id="submit" class="button is-primary" onclick="create_session();">세션
-                        생성</button>
-                </div>
+                    <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
+                            class="textarea is-primary" name="note"></textarea>
+                    </div>
+                    <div><input name="userName" class="hidden_value" value="{{ username }}" /></div>
+                    <div><input name="userId" class="hidden_value" value="1234565789" /></div>
+                    <div><input name="date" class="hidden_value" value="20240109" /></div>
+                    <div class="label">
+                        <label for="submit" class="label"> </label>
+                        <button type="submit" id="submit" class="button is-primary">세션
+                            생성</button>
+                    </div>
             </form>
         </section>
 
 
-        <button type="submit" onclick="participate_session(username, gender, 777777);">참여</button>
+        <button type="submit" onclick="participate_session('홍길동', '04', '659e50a2df698e0951c0fdab');">참여</button>
         <button type="submit" onclick="except_session(username, gender, 888888);">취소</button>
         <button type="submit" onclick="delete_session(username, gender, 999999);">삭제</button>
     </main>
