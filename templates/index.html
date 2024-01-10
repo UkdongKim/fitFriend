@@ -7,18 +7,16 @@
     <title>FitFriend</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="../static/css/stylesheet.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bulma@0.9.2/js/bulma.min.js"> </script>
+
     <style>
         main {
             width: 1100px;
             margin: auto;
             padding: 20px;
 
-        }
-
-        #make_session {
-            width: 500px;
-            margin: auto;
-            padding: 50px;
         }
 
         table,
@@ -53,8 +51,8 @@
         }
 
         textarea {
-            min-width: 25% !important;
-            max-width: 25% !important;
+            min-width: 200px !important;
+            max-width: 200px !important;
         }
 
         .tile.is-parent.is-vertical {
@@ -65,29 +63,240 @@
             height: 600px;
         }
 
-        label {
+        .container {
+            width: 500px;
+            clear: both;
+            padding: 10px;
+            border-color: white;
+            align-content: right ;
+        }
+
+        .label {
             color: white !important;
+            /* float:left; */
+            height: auto;
+            font-size: 16px;
+            line-height: center;
+            width: 200px;
+            align-content: center !important;
+            /* clear: both; */
+            margin: auto;
+
         }
 
         body {
             background-color: #303030;
         }
 
+        section {
+            width: 500px;
+            height: 600px;
+            border-color: white;
+        }
+
         #createSession {
             color: #6ae9a5;
             font-weight: bold;
             font-size: 30px;
+            text-align: center;
+            margin-bottom: 15px;
         }
 
         .tile {
             min-width: 155px;
             max-width: 155px;
+            position: relative;
+        } 
+
+        /* .notification {
+            position: relative;
+            min-width: 155px;
+            max-width: 155px;
+        } */
+
+        .invisible {
+            top: 0;
+            left: 0;
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+
+        } 
+
+        select {
+           width: 200px; 
         }
+        input {
+            width: 200px !important;
+        }
+
+        #submit {
+            margin: auto;
+            margin-top: 30px;
+
+            width: 200px;
+        }
+
+        .fill_up {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #6ae9a5;
+        }
+
+        /* #textarea {
+            display: flex;
+            
+        } */
+
+        /* #to-be-form { 
+            border: 2px solid #6ae9a5; 
+        } */
+
     </style>
     <script>
-        function session() {
-            let
-        }
+
+        //  로딩 후 바로 현재 있는 운동세션들 모두 보여줌 
+        // window.onload = add_tile; //, login_info;
+
+        // //로그인 정보 받아와야 함 (이후 session함수를 사용하기 위해 필요)
+        // // function login_info() {
+        // //     type: "GET",
+        // // username 
+        // // userId
+        // // }
+
+        // // GET을 할 수 있는 URL 생성 필요? 
+
+     
+
+        // function add_tile() {
+        //     $(document).ready(function () {
+        //         if ("{{session['name']}}" != "");
+        //         alert("{{session['gender']}}");
+        //     })
+
+        //     // $('#월').empty()
+        //     // $('#화').empty()
+        //     // $('#수').empty()
+        //     // $('#목').empty()
+        //     // $('#금').empty()
+        //     // $('#토').empty()
+        //     // $('#일').empty()
+
+        //     // // $.ajax({
+        //     //     type: "GET",
+        //     //     url: "/tile",
+        //     //     data: {},
+        //     //     success: function (response) {
+        //     //         let session_info = response["data"];
+        //     //         console.log(session_info);
+        //     //         for (let i = 0; i < session_info.length; i++) {
+        //     //             let number = i
+        //     //             let slot = (session_info[i]["day"]);
+        //     //             make_tile(number, slot);
+        //     //         }
+        //     //     }
+        //     // }
+        //     // )
+
+        // }
+
+        // // // DB안 데이터로 타일을 생성
+        // // function make_tile(number, day) {
+        // //     let tempHtml =
+        // //         // `<div class="tile">
+        // //         //     <article class="tile is-child notification is-primary">
+        // //         //         <p class="tile_title">${session_info[i]["name"]}</p>
+        // //         //         <p class="tile_title">${session_info[i]["gender"]}</p>
+        // //         //         <p class="content">${session_info[i]["field"]}</p>
+        // //         //         <p class="content">1/${session_info[i]["max_member"]}</p>
+        // //         //     </article>
+        // //         // </div>`
+
+        // //         // `<div class="tile">
+        // //         //     <div class="tile is-parent is-vertical">
+        // //         //         <article class="tile is-child notification is-primary">
+        // //         //             <p class="tile_title">남재희</p>
+        // //         //             <p class="tile_title">남</p>
+        // //         //             <p class="content">1시 런닝</p>
+        // //         //             <p class="content">(1/4)</p>
+        // //         //         </article>
+        // //         //     </div>
+        // //         // </div>`
+
+
+        // //         //     어떻게 해야 제대로 된 위치에 갈 지 확인
+        // //         // $("#" + day).append(tempHtml);
+
+
+        // // }
+
+        // function create_session() {
+        //     // let userName = username;
+        //     // let userId = userId;
+        //     let day = $("#post-day").val();
+        //     let time = $("#post-time").val();
+        //     let field = $("#post-field").val();
+        //     let max_member = $("#post-max_member").val();
+        //     // let note = $("#post-note").val(); //session.py에서 노트 추가될때까지 대기 - 현재 상태에서 활성화 시킬 시 404
+        //     let result;
+
+        //     //계속 실패가 뜸 - 터미널에선 201
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/session",
+        //         data: { day: day, time: time, field: field, max_member: max_member }, //note : note 는 session.py에서 노트 추가될때까지 대기
+        //         //username과 userId정보도 보내도록 해야함
+        //         uccess: function (response) {
+        //             if (response["result"] == "success") {
+        //                 alert("성공");
+
+        //                 result = response["data"];
+        //                 add_tile();
+        //             } else {
+        //                 alert("실패");
+        //             }
+        //         }
+        //     })
+        // }
+
+        // // // 타일 추가시키는 더미함수 - 작동됨
+        // // // function make_dummy() {
+        // // //     let tempHtml =
+        // // //         `<div class="tile">
+        // // //             <div class="tile is-parent is-vertical">
+        // // //                 <article class="tile is-child notification is-primary">
+        // // //                     <p class="tile_title">남재희</p>
+        // // //                     <p class="tile_title">남</p>
+        // // //                     <p class="content">1시 런닝</p>
+        // // //                     <p class="content">(1/4)</p>
+        // // //                 </article>
+        // // //             </div>
+        // // //         </div>`
+
+        // // //     $('#화').append(tempHtml);
+        // // // }
+
+        // // //     function updateOnSunday() {
+        // // //     // 현재 날짜와 시간 가져오기
+        // // //     const currentDate = new Date();
+        // // //     const currentDay = currentDate.getDay(); // 0은 일요일, 1은 월요일, ...
+
+        // // //     // 업데이트를 원하는 시간 (24시간 형식)
+        // // //     const updateHour = 24; // 예시로 24시간으로 설정
+
+        // // //     // 일요일이고 현재 시간이 업데이트 시간보다 이후인 경우에만 업데이트 수행
+        // // //     if (currentDay === 0 && currentDate.getHours() >= updateHour) {
+        // // //         // 여기에 실제로 수행할 업데이트 로직 추가
+        // // //         console.log('Update logic executed on Sunday at', currentDate);
+        // // //     }
+        // // // }
+
+        // // // // 매 분마다 updateOnSunday 함수를 호출하는 setInterval
+        // // // setInterval(updateOnSunday, 3600000); // 3600000밀리초(60분) 간격으로 실행
     </script>
 </head>
 
@@ -115,53 +324,111 @@
                     <th>Sun</th>
                 </tr>
                 <tr>
-                    <th class="slot">
-                        <div class="tile">
-                            <div class="tile is-parent is-vertical">
-                                <article class="tile is-child notification is-primary">
-                                    <p class="tile_title">{{name}}
-                                    <p class="content">17:00
-                                    <p class="content">런닝 (1/4)
-                                </article>
-                            </div>
+                    <th class="slot" id="월">
+
+                        {# % if (gender == "남") or (gender =="여") % #}
+
+                        <div class="tile is-parent is-vertical container">
+                            <article class="tile is-child notification is-primary">
+                                <!-- Your tile content here -->
+                                <p class="tile_title">{{name}}</p>
+                                <p class="content">18:00 런닝 </p>
+                                <p class="content">(1/4) </p>
+                                <!-- Modal Structure -->
+                                <div class="container">
+                                    <div id="image-modal" class="modal">
+                                        <div class="modal-background"></div>
+                                        <div class="modal-content">
+                                            <div class="modal-card">
+                                                <header class="modal-card-head">
+                                                    <p class="modal-card-title">Modal title</p>
+                                                </header>
+                                                <div class="modal-ca  rd-body">
+                                                    <!-- Content ... -->
+                                                </div>
+                                                <footer class="modal-card-foot">
+                                                    <button class="button is-success">Save changes</button>
+                                                </footer>
+                                            </div>
+                                        </div>
+                                    <button id="image-modal-close" class="modal-close"></button>
+                                    </div>
+                                    
+                                </div>
+                                <button class="invisible" id="showModal">Shows</button>
+                            </article>
                         </div>
-                        placeholder2
-                    </th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                    <th class="slot"></th>
-                </tr>
-            </table>
+                        {# % endif % #}
+
+                        
+
         </div>
-        <hr>
-        <div id="make_session">
-            <form>
-                <h2 class="header" id="createSession">운동 세션 생성</h2>
-                <label for="day" class="label">요일</label>
-                <div class="select is-primary">
-                    <select name="day" id="day">
-                        <optgroup label="요일을 선택하세요">
-                            <option value="mon">월</option>
-                            <option value="tue">화</option>
-                            <option value="wed">수</option>
-                            <option value="thu">목</option>
-                            <option value="fri">금</option>
-                            <option value="sat">토</option>
-                            <option value="sun">일</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <div>
-                    <label for="time" class="label">시간</label>
-                    <input type="text" class="input is-primary" id="time">
-                </div>
-                <div>
-                    <label for="exercise" class="label">운동 종목</label>
+
+        </th>
+        <th class="slot" id="화"></th>
+        <th class="slot" id="수"></th>
+        <th class="slot" id="목"></th>
+        <th class="slot" id="금"></th>
+        <th class="slot" id="토"></th>
+        <th class="slot" id="일"></th>
+        </tr>
+        </table>
+        </div>
+        <br>
+        <section class="fill_up">
+            <h2 class="header" id="createSession">운동 세션 생성</h2>
+            <div id="to-be-form">
+                <div class="label">요일<br>
                     <div class="select is-primary">
-                        <select name="exercise" id="exercise">
+                        <select name="day" id="post-day">
+                            <optgroup label="요일을 선택하세요">
+                                <option value="mon">월</option>
+                                <option value="tue">화</option>
+                                <option value="wed">수</option>
+                                <option value="thu">목</option>
+                                <option value="fri">금</option>
+                                <option value="sat">토</option>
+                                <option value="sun">일</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="label">
+                    시간 <br><div class="select is-primary">
+                        <select id="post-time">
+                            <!-- optgroup 줄일 수 있나 확인 -->
+                            <optgroup>
+                                <option value="1">01:00</option>
+                                <option value="2">02:00</option>
+                                <option value="3">03:00</option>
+                                <option value="4">04:00</option>
+                                <option value="5">05:00</option>
+                                <option value="6">06:00</option>
+                                <option value="7">07:00</option>
+                                <option value="8">08:00</option>
+                                <option value="9">09:00</option>
+                                <option value="10">10:00</option>
+                                <option value="11">11:00</option>
+                                <option value="12">12:00</option>
+                                <option value="13">13:00</option>
+                                <option value="14">14:00</option>
+                                <option value="15">15:00</option>
+                                <option value="16">16:00</option>
+                                <option value="17">17:00</option>
+                                <option value="18">18:00</option>
+                                <option value="19">19:00</option>
+                                <option value="20">20:00</option>
+                                <option value="21">21:00</option>
+                                <option value="22">22:00</option>
+                                <option value="23">23:00</option>
+                                <option value="24">24:00</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="label">
+                    운동 종목 <br><div class="select is-primary">
+                        <select name="field" id="post-field">
                             <optgroup label="종목을 선택하세요">
                                 <option value="fitness">헬스</option>
                                 <option value="running">런닝</option>
@@ -171,22 +438,37 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label for="max_people" class="label">최대 인원</label>
-                    <input type="text" id="max_people" class="input is-primary">
+                <div  class="label">
+                    최대 인원 <br><input type="text" id="post-max_member" class="input is-primary">
                 </div>
-                <div>
-                    <label for="note" class="label">비고</label>
-                    <textarea id="note" cols="20" rows="2" class="textarea is-primary"></textarea>
+                <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2" class="textarea is-primary"></textarea>
                 </div>
-                <div>
+                <div class="label">
                     <label for="submit" class="label"> </label>
-                    <button id="submit" class="button is-primary" onclick="session();">세션 생성</button>
+                    <button type="button" id="submit" class="button is-primary" onclick="create_session();">세션 생성</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </section>
+
+
 
     </main>
+
 </body>
+
+<script>
+    var btn = document.querySelector('#showModal');
+    var modalDlg = document.querySelector('#image-modal');
+    var imageModalCloseBtn = document.querySelector('#image-modal-close');
+    btn.addEventListener('click', function () {
+         console.log('hi');
+         modalDlg.classList.add('is-active');
+    });
+
+     imageModalCloseBtn.addEventListener('click', function () {
+         modalDlg.classList.remove('is-active');
+     });
+</script>
+
 
 </html>

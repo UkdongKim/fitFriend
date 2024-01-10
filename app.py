@@ -4,6 +4,7 @@ import json
 from flask import Flask, flash, render_template, request, redirect, url_for, session, jsonify, make_response
 from pymongo import MongoClient
 from session import app_session
+from datetime import datetime, timedelta
 from bson import json_util
 from flask_jwt_extended import JWTManager, decode_token
 import jwt
@@ -27,30 +28,35 @@ def parse_json(data):
 
 # 메인 페이지
 @app.route('/')
-def hello_world():
-    token = request.cookies.get('token')
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        print(payload['username'])
-        print(payload['password'])
-        user_info = db.users.find_one({"name": payload['username']})
-        return render_template('index.html', username=user_info['name'], gender=user_info['gender'])
-    except jwt.ExpiredSignatureError:
-        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
-        response = make_response(redirect(url_for("login")))
-        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
-        return response
-    except jwt.exceptions.DecodeError:
-        flash("로그인 정보가 존재하지 않습니다. 다시 로그인 해주세요.")
-        response = make_response(redirect(url_for("login")))
-        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
-        return response
+def hello_world():  # put application's code here
+    current_date = datetime.now()
+    start_of_week, end_of_week = get_start_end_of_week(current_date)
+
+    sessionList = db.session.find({
+        'day': {'$gte': start_of_week, '$lte': end_of_week},
+        'show': True
+    }).sort({
+        'day': 1,
+        'time': 1
+    })
+
+
+
+    for i in sessionList:
+        print(i)
+    result = list(sessionList)
+
+    return render_template("index.html", sessionDataList=result)
+    if not session:
+        return redirect(url_for('login'))
+    
+    return render_template("index.html")
 
 # 로그인
 @app.route('/login', methods=['GET'])
 def login():
-    token = request.cookies.get('token')
-    if token:
+
+    if session:
         return redirect(url_for('hello_world'))
     
     return render_template('login.html')
@@ -60,22 +66,17 @@ def login():
 def loginOk():
     username = request.form['username']
     password = request.form['password']
+    check = db.users.find_one({'name' : username, 'password': password})
 
-    pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-
-    check = db.users.find_one({'name' : username, 'password': pwHash})
-
-    if check is not None:
-        payload = {
-            'username' : username,
-            'password' : pwHash,
-            'exp' : datetime.utcnow() + timedelta(seconds=60)
-        }
-
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-        response = make_response(redirect(url_for('hello_world')))
-        response.set_cookie('token', token)
-        return response
+    print(check)
+    if check:
+        session['name'] = username
+        if 'gender' in check:
+            session['gender'] = check['gender']
+            # session['_id'] = check['_id']
+        session['gender'] = check['gender']
+        session['userid'] = parse_json(check['_id'])
+        return redirect(url_for('hello_world'))
     else:
         flash("이름과 비밀번호를 확인해주세요.")
         return render_template('login.html')
@@ -99,11 +100,16 @@ def join():
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
         return render_template('login.html')
-    
-# 가이드 이동
-@app.route('/guide')
-def guide():
-    return render_template('guide.html')
+
+
+# 월요일과 일요일 구하기
+def get_start_end_of_week(current_date):
+    # 현재 날짜를 기준으로 해당 주의 시작을 찾음
+    start_of_week = current_date - timedelta(days=current_date.weekday())
+    # 현재 날짜를 기준으로 해당 주의 끝을 찾음 (일요일)
+    end_of_week = start_of_week + timedelta(days=6)
+
+    return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
