@@ -1,13 +1,23 @@
+from datetime import timedelta, datetime
+import hashlib
 import json
-from flask import Flask, flash, render_template, request, redirect, url_for, session
+from flask import Flask, flash, render_template, request, redirect, url_for, session, jsonify, make_response
 from pymongo import MongoClient
 from session import app_session
 from datetime import datetime, timedelta
 from bson import json_util
+from flask_jwt_extended import JWTManager, decode_token
+import jwt
 
 
 app = Flask(__name__)
-app.secret_key = 'moon'
+app.secret_key = 'MOONUNG'
+
+
+SECRET_KEY = 'MOONUNG'
+
+jwt_manager = JWTManager(app)
+
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
 db = client.test
 
@@ -16,6 +26,7 @@ app.register_blueprint(app_session) # blueprint 등록
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
+# 메인 페이지
 @app.route('/')
 def hello_world():  # put application's code here
     current_date = datetime.now()
@@ -50,7 +61,6 @@ def login():
     
     return render_template('login.html')
 
-
 # 로그인 성공 시
 @app.route('/loginOk', methods=['POST'])
 def loginOk():
@@ -83,9 +93,11 @@ def join():
 
     if existUser is not None:
         flash("동일한 이름이 존재합니다.")
+        return render_template('login.html')
     
     elif username != None and gender != None and password != None and password == passwordcheck :
-        db.users.insert_one({'name': username, 'password': password, 'gender': gender})
+        pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
         return render_template('login.html')
 
