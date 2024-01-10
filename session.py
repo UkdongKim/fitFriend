@@ -1,9 +1,11 @@
 import logging
 
-from flask import Flask, render_template, Blueprint, request, jsonify, json
+from flask import Flask, make_response, redirect, render_template, Blueprint, request, jsonify, json, url_for
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
+from flask_jwt_extended import JWTManager, decode_token
+import jwt
 
 app = Flask(__name__)
 client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
@@ -40,12 +42,26 @@ def make_session():
         ]
     }
 
+    token = request.cookies.get('token')
+    if token is not None:
+            payload = check_token(token)
+            if payload is None:
+                response = make_response(redirect(url_for("login")))
+                response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+                return response
+    else:
+        response = make_response(redirect(url_for("login")))
+        response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+        return response
+    
     result = db.session.insert_one(session)
 
-    if result.inserted_id:
-        return jsonify({'success': True, 'message': 'Data inserted success'}), 201
-    else:
-        return jsonify({'success': False, 'message': 'Failed to insert data'}), 500
+    return render_template('index.html')
+
+    # if result.inserted_id:
+    #     return jsonify({'success': True, 'message': 'Data inserted success'}), 201
+    # else:
+    #     return jsonify({'success': False, 'message': 'Failed to insert data'}), 500
 
 
 # 세션 조회
@@ -135,3 +151,16 @@ def get_start_end_of_week(current_date):
     end_of_week = start_of_week + timedelta(days=6)
 
     return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
+
+# 토큰 검증 메소드
+SECRET_KEY = 'MOONUNG'
+
+def check_token(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        if payload['exp'] < datetime.utcnow():
+            payload = None
+    except jwt.exceptions.DecodeError:
+        payload = None
+
+    return payload
