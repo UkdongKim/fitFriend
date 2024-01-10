@@ -1,3 +1,11 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            alert("{{messages[-1]}}")
+        </script>
+    {% endif %}
+{% endwith %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,19 +30,20 @@
         background-color: #303030;
     }
 
-    footer {
-        width: 100%;
-        position: relative;
-    }
-
-    footer>div {
+    footer > div:nth-child(1) {
         margin: 20px;
         width: 170px;
+        position: absolute;
+        left: 10%;
+        bottom: 0;
     }
 
-    footer>div:nth-child(1) {
+    footer > div:nth-child(2) {
         margin: 20px;
         width: 170px;
+        position: absolute;
+        right: 10%;
+        bottom: 0;
     }
 </style>
 
@@ -117,6 +126,7 @@
         $('#join-btn').addClass('btn-check');
     });
 
+    // 회원가입 유효성
     $('#join-form').on('submit', function(e) {
     var password = $('#join-password').val();
     var passwordCheck = $('#join-passwordcheck').val();
@@ -136,6 +146,21 @@
         alert('이름을 작성해주세요.'); 
     }
     });
-</script>
 
+    // 로그인 유효성
+    $('#login-form').on('submit', function(e) {
+        var loginName = $('#username').val();
+        var loginPassword = $('#password').val();
+
+        if (!loginName) {
+        e.preventDefault();
+        alert('이름을 작성해주세요.');
+        }
+
+        if (!loginPassword) {
+        e.preventDefault();
+        alert('비밀번호를 작성해주세요.');
+        }
+    });
+</script>
 </html>
