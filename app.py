@@ -16,10 +16,10 @@ SECRET_KEY = 'MOONUNG'
 jwt_manager = JWTManager(app)
 
 #local
-# client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
+client = MongoClient('15.164.215.62:27017', username='dbadmin', password='admin1234')
 
 #aws
-client = MongoClient('localhost:27017', username='dbadmin', password='admin1234')
+# client = MongoClient('localhost:27017', username='dbadmin', password='admin1234')
 
 db = client.test
 

@@ -184,7 +184,7 @@
                 <tr>
 
 {#        조회           #}
-        {% set days = ['MON', 'TUE', 'WED', 'THURS' , 'FRI', 'SAT', 'SUN'] %}
+        {% set days = ['MON', 'TUES', 'WED', 'THURS' , 'FRI', 'SAT', 'SUN'] %}
 
         {% for day in days %}
 
@@ -333,10 +333,8 @@
 
     </main>
 
-</body>
 
 <script>
-
     let articles = document.querySelectorAll('.article');
     for(let i = 0; i < articles.length; i++){
         articles[i].addEventListener('click', (e) => {
@@ -364,6 +362,8 @@
     let loginUserName = '{{ username }}';
     let loginUserId = '{{ userId }}';
 
+    let isRun = false;
+
     function clickSession(e){
         // 모달 생길 때 분기처리 하기
 
@@ -372,6 +372,8 @@
         let maxNum;
         let selectedSessionId;
         let selectedParticipates  = [];
+
+        console.log(selectedSessionId);
 
         createUserName = e.target.children[0].innerText;
         currentNum = e.target.children[2].children[0].innerText;
@@ -421,15 +423,27 @@
 
     }
 
+
+
         function participate_session(username, userid, sessionId) {
+
+        if(isRun){
+            return
+        }
+
+        isRun = true;
+
         $.ajax({
             type: 'POST',
             url: '/session/participate',
             data: { "userName": username, "userId": userid, "sessionId": sessionId },
+            async : false,
             success: function (response) {
                 if (response['result'] == 'success') {
                     alert("참여되었습니다!");
-                    window.location.reload()
+                    window.location.reload();
+                    isRun = true;
+
                 }
                 if (response['result'] == 'fail') {
                     alert(response["msg"]);
@@ -439,14 +453,22 @@
     }
 
         function except_session(username, userid, sessionId) {
+            if(isRun){
+                return
+            }
+
+            isRun = true;
         $.ajax({
             type: 'POST',
             url: '/session/quit',
+            async : false,
             data: { "userName": username, "userId": userid, "sessionId": sessionId },
             success: function (response) {
                 if (response['result'] == 'success') {
                     alert("참여 취소되었습니다!");
                     window.location.reload()
+                    isRun = false;
+
                 } else {
                     alert("업데이트 실패");
                 }
@@ -455,14 +477,22 @@
     }
 
         function delete_session(sessionId) {
+            if(isRun){
+                return
+            }
+
+            isRun = true;
         $.ajax({
             type: 'PUT',
             url: '/session/' + sessionId,
             data: {},
+            async : false,
             success: function (response) {
                 if (response['result'] == 'success') {
                     alert("세션 삭제되었습니다!");
-                    window.location.reload()
+                    window.location.reload();
+                    isRun = false;
+
                 }
             }
         });
@@ -489,15 +519,9 @@
     //         }
     //     })
     // }
-
-
-
-
-
-
-</script>
-<script>
     $(document).ready(function () {
+
+
         const date = new Date();
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -507,6 +531,12 @@
         $("#dateInput").val(today);
         console.log(today)
     });
+
+
+
+
 </script>
+</body>
+
 
 </html>
