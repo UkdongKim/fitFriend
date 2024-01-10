@@ -30,6 +30,7 @@ def hello_world():  # put application's code here
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         print(payload['username'])
         print(payload['password'])
+        print(payload['userid'])
         user_info = db.users.find_one({"name": payload['username']})
 
         current_date = datetime.now()
@@ -45,7 +46,7 @@ def hello_world():  # put application's code here
         for i in sessionList:
             print(i)
         result = list(sessionList)
-        return render_template('index.html', username=user_info['name'], gender=user_info['gender'], sessionDataList=result)
+        return render_template('index.html', username=user_info['name'], gender=user_info['gender'], userId=str(user_info['_id']), sessionDataList=result)
     except jwt.ExpiredSignatureError:
         flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
         response = make_response(redirect(url_for("login")))
@@ -80,6 +81,7 @@ def loginOk():
 
     if check is not None:
         payload = {
+            'userid' : str(check['_id']),
             'username' : username,
             'password' : pwHash,
             'exp' : datetime.utcnow() + timedelta(seconds=60)
@@ -91,7 +93,7 @@ def loginOk():
         return response
     else:
         flash("이름과 비밀번호를 확인해주세요.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 회원가입
 @app.route('/join', methods=['POST'])
@@ -105,13 +107,13 @@ def join():
 
     if existUser is not None:
         flash("동일한 이름이 존재합니다.")
-        return render_template('login.html')
+        return redirect(url_for('login'))
     
     elif username != None and gender != None and password != None and password == passwordcheck :
         pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
         print('회원가입 성공')
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 # 가이드 이동
 @app.route('/guide')

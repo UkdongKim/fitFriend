@@ -8,6 +8,13 @@ header {
     position: relative;
 }
 
+.logout {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-size: 35px;
+    cursor: pointer;
+}
 
 
 .title {
@@ -32,6 +39,14 @@ header {
     position: absolute;
     top: 5%;
     right: 5%;
+}
+
+.logout {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-size: 35px;
+    cursor: pointer;
 }
 
 
