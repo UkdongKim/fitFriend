@@ -356,7 +356,7 @@
         function delete_session(sessionId) {
             $.ajax({
                 type: 'PUT',
-                url: '/session/'sessionId'',
+                url: '/session/' + sessionId,
                 data: {},
                 success: function (response) {
                     if (response['result'] == 'success') {
