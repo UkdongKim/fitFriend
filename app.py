@@ -30,6 +30,7 @@ def hello_world():  # put application's code here
         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         print(payload['username'])
         print(payload['password'])
+        print(payload['userid'])
         user_info = db.users.find_one({"name": payload['username']})
 
         current_date = datetime.now()
@@ -45,7 +46,7 @@ def hello_world():  # put application's code here
         for i in sessionList:
             print(i)
         result = list(sessionList)
-        return render_template('index.html', username=user_info['name'], gender=user_info['gender'], sessionDataList=result)
+        return render_template('index.html', username=user_info['name'], gender=user_info['gender'], userId=str(user_info['_id']), sessionDataList=result)
     except jwt.ExpiredSignatureError:
         flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
         response = make_response(redirect(url_for("login")))
@@ -80,6 +81,7 @@ def loginOk():
 
     if check is not None:
         payload = {
+            'userid' : str(check['_id']),
             'username' : username,
             'password' : pwHash,
             'exp' : datetime.utcnow() + timedelta(seconds=60)
@@ -127,6 +129,15 @@ def get_start_end_of_week(current_date):
     end_of_week = start_of_week + timedelta(days=6)
 
     return start_of_week.strftime("%Y%m%d"), end_of_week.strftime("%Y%m%d")
+
+#로그아웃
+@app.route('/logout')
+def logout():
+    # token = request.cookies.get('token')
+    flash("로그아웃 되었습니다. 로그인 화면으로 돌아갑니다.")
+    response = make_response(redirect(url_for("login")))
+    response.set_cookie('token', '', expires=0)   # 쿠키 삭제
+    return response
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080)
