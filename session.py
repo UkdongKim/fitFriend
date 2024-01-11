@@ -55,12 +55,13 @@ def make_session():
         user_info = db.users.find_one({"name": payload['username']})
         if user_info is not None:
             db.session.insert_one(session)
+            flash('세션이 생성되었습니다!')
             return redirect(url_for('hello_world'))
         else:
             flash("생성할 수 없습니다.")
             return redirect(url_for('hello_world'))
     except jwt.ExpiredSignatureError:
-        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.")
         response = make_response(redirect(url_for("login")))
         response.set_cookie('token', '', expires=0)   # 쿠키 삭제
         return response

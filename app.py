@@ -57,7 +57,7 @@ def hello_world():  # put application's code here
 
         return render_template('index.html', username=user_info['name'], gender=user_info['gender'], userId=str(user_info['_id']), sessionDataList=result)
     except jwt.ExpiredSignatureError:
-        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.")
         response = make_response(redirect(url_for("login")))
         response.set_cookie('token', '', expires=0)   # 쿠키 삭제
         return response
