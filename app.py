@@ -121,7 +121,7 @@ def join():
     elif username != None and gender != None and password != None and password == passwordcheck :
         pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
-        print('회원가입 성공')
+        flash('회원가입 성공')
         return redirect(url_for('login'))
 
 # 가이드 이동

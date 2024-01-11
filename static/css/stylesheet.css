@@ -35,8 +35,9 @@ header {
 #userGuide {
     float: right;
     font-size: 20px;
-    color: white;
+    color: skyblue;
     text-align: right;
+    font-weight: bold;
 }
 
 .guide-box {
