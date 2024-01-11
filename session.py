@@ -51,6 +51,7 @@ def make_session():
         user_info = db.users.find_one({"name": payload['username']})
         if user_info is not None:
             db.session.insert_one(session)
+            flash('세션이 생성되었습니다!')
             return redirect(url_for('hello_world'))
         else:
             flash("생성할 수 없습니다.")

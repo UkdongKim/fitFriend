@@ -48,7 +48,7 @@ def hello_world():  # put application's code here
         result = list(sessionList)
         return render_template('index.html', username=user_info['name'], gender=user_info['gender'], userId=str(user_info['_id']), sessionDataList=result)
     except jwt.ExpiredSignatureError:
-        flash("로그인 시간이 만료되었습니다. 다시 로그인 해")
+        flash("로그인 시간이 만료되었습니다. 다시 로그인 해주세요.")
         response = make_response(redirect(url_for("login")))
         response.set_cookie('token', '', expires=0)   # 쿠키 삭제
         return response
@@ -84,7 +84,7 @@ def loginOk():
             'userid' : str(check['_id']),
             'username' : username,
             'password' : pwHash,
-            'exp' : datetime.utcnow() + timedelta(seconds=60)
+            'exp' : datetime.utcnow() + timedelta(seconds=300)
         }
 
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
@@ -112,7 +112,7 @@ def join():
     elif username != None and gender != None and password != None and password == passwordcheck :
         pwHash = hashlib.sha256(password.encode('utf-8')).hexdigest()
         db.users.insert_one({'name': username, 'password': pwHash, 'gender': gender})
-        print('회원가입 성공')
+        flash('회원가입 성공!')
         return redirect(url_for('login'))
 
 # 가이드 이동
