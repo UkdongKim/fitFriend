@@ -238,17 +238,18 @@
                                 <p class="content"><span>{{ item.participants|count}}</span>명 / <span>{{
                                         item.max_member
                                         }}</span>명 </p>
+                                <input type="hidden" value="{{ item._id }}">
+
                                 <span class="icon is-small">
                                     <i class="fas fa-angle-down" aria-hidden="true"></i>
                                 </span>
-                                <input type="hidden" value="{{ item._id }}">
                                 <div class="dropdown-menu" id="dropdown-menu4" role="menu">
                                     <span class="middle_title">참여자 명단</span>
                                     {% for participant in item.participants %}
                                     <div>{{ participant.name }}</div>
                                     {% endfor %}
                                     <hr style="width: 70%; margin: 5px auto;">
-                                    <div style="font-size: 14px;">{{ item.note }}</div>
+{#                                    <div style="font-size: 14px;">{{ item.note }}</div>#}
 
                                 </div>
                             </article>
@@ -340,8 +341,8 @@
                 <div class="label">
                     최대 인원 <br><input type="text" id="post-max_member" class="input is-primary" placeholder="최대 모집 인원"
                         name="max_member">
-                    <div id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
-                            class="textarea is-primary" name="note"></textarea>
+                    <div style="display: none" id="textarea" class="label"> 비고 <br> <textarea id="post-note" cols="20" rows="2"
+                            class="textarea is-primary" name="note" value=""></textarea>
                     </div>
                     <div><input name="userName" class="hidden_value" value="{{ username }}" /></div>
                     <div><input name="userId" class="hidden_value" value="{{ userId }}" /></div>
@@ -439,13 +440,19 @@
         currentNum = e.currentTarget.children[2].children[0].innerText;
         maxNum = e.currentTarget.children[2].children[1].innerText;
         selectedSessionId = e.currentTarget.children[3].value;
-        console.log(selectedSessionId);
+        console.log("selectedSessionId" + selectedSessionId);
+        console.log("createUserName" + createUserName);
+        console.log("currentNum" + currentNum);
+        console.log("maxNum" + maxNum);
 
-        let participationNumber = e.currentTarget.children[4].children.length;
+        let participationNumber = e.currentTarget.children[5].children.length;
 
-        for(let i = 1; i < e.currentTarget.children[4].children.length; i++){
-            selectedParticipates.push(e.currentTarget.children[4].children[i].innerText);
+        for(let i = 1; i < e.currentTarget.children[5].children.length; i++){
+            selectedParticipates.push(e.currentTarget.children[5].children[i].innerText);
         }
+        console.dir(e.currentTarget.children[5].children[1].innerText);
+        console.log("selectedParticipates" + selectedParticipates);
+
 
         // #1 참여인원 리스트에 로그인 유저가 없고 자리가 남아 있을 때 => 참여 모달
         if(selectedParticipates.indexOf(loginUserName) && maxNum > currentNum){
